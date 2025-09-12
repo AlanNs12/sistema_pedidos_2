@@ -5,18 +5,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="title"></title>
-    <!--Link proprios projeto-->
+    <!--Link internos projeto-->
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style-lista-pecas.css">
     <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="/uploads/apple-touch-icon.png">
-    <!--links bootstrap-->
-    <link rel="stylesheet" href="../css/style-main.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!--links bootstrap interno-->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+    <!--Link icones Bootstrap externo-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
         integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!--Ajax Externo-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
@@ -65,16 +65,14 @@
 
 
     </main>
-    <footer class="border-top py-4 mt-5 bg-light">
+    <footer class="border-top py-4 mt-5">
         <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <div class="small text-muted">© <span id="y"></span> Sistema Pedidos via Whatsapp — <a href="#">MTTR
+            <div class="small text-muted">© <span id="y"></span> Sistema Pedidos via Whatsapp — <a href="#"
+                    class="link-info">MTTR
                     Tecnologia que transforma seu negócio.</a></div>
-            <div class="d-flex gap-3 footer small">
-                <a href="https://wa.me/5561981697924?text=Ol%C3%A1!%20Tenho%20interesse%20para%20marcar%20uma%20reuni%C3%A3o%20para%20entender%20mais%20sobre%20as%20solu%C3%A7%C3%B5es%20que%20voc%C3%AAs%20oferecem!%20"
-                    target="_blank" class="badge badge-secondary m-1">Contato</a>
-            </div>
         </div>
     </footer>
+
     <!-- Carrinho -->
     <a href="javascript:void(0);" class="button-cart" id="openCartModal">
         <i class="bi bi-cart2"></i>
@@ -100,17 +98,18 @@
             </div>
         </div>
     </div>
+
+    <!--Links Internos-->
     <script src="/config.js"></script>
     <script src="../js/nomeEmpresa.js"></script>
     <script src="../js/lista-pecas.js"></script>
+    <script src="../bootstrap/js/bootstrap.bundle.js"></script>
+    <!--Links Externos-->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
         integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
 </body>
 

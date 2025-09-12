@@ -25,6 +25,44 @@ body {
   background-color: rgba(255, 255, 255, 0.7); /* Fundo branco semitransparente */
   backdrop-filter: blur(10px); /* Efeito de desfoque */
   -webkit-backdrop-filter: blur(10px); /* Para Safari */
+   margin-top: 5px;
+}
+main {
+    margin: 0.5em;
+}
+
+.button-cart {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    bottom: 20px;
+    right: 20px;
+    background-color: #f3f3f3c8;
+    color: #121212;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 1px 1px 2px #888;
+    
+}
+.button-cart:hover {
+    background-color: #ffffff;
+    transition: 0.5s;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-down {
+    animation: slideDown 0.5s ease-out forwards;
 }
 
 

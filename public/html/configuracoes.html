@@ -5,56 +5,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="title"></title>
-    <link rel="stylesheet" href="../css/style-main.css">
+    <!--Links internos projeto-->
     <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="/uploads/apple-touch-icon.png">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style-configuracoes.css">
+    <!--links bootstrap interno-->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+    <!--Link icones Bootstrap externo-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
         integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        header {
-            width: 100%;
-        }
-
-        .settings-container {
-            max-width: 500px;
-            width: 100%;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .settings-container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .settings-container .form-group {
-            margin-bottom: 15px;
-        }
-
-        .settings-container .btn {
-            width: 100%;
-        }
-
-        img#logoAtual {
-            max-height: 120px;
-            display: block;
-            margin: 0 auto 15px auto;
-        }
-    </style>
 </head>
 
 <body>
@@ -69,7 +29,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="index">Inicio <span class="sr-only">(Página atual)</span></a>
+                        <a class="nav-link" href="index">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="painel">Acesso</a>
@@ -90,66 +50,66 @@
             </div>
         </nav>
     </header>
-    <div class="settings-container mt-4 mb-4">
-        <h2>Configurações</h2>
-        <div id="formConfiguracoes">
-            <section class="mb-4">
-                <h5>Logo da Empresa</h5>
-                <img src="/uploads/logo.jpg" alt="Logo atual" id="logoAtual">
-                <div class="form-group">
-                    <form action="/upload-logo" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="logo" required>
-                        <button type="submit" class="m-2 w-auto text-center btn btn-success ">Salvar Logo</button>
-                    </form>
-
-                </div>
-            </section>
-            <form class="mb-4">
-                <h5>Razão Social</h5>
-                <div class="form-group">
-                    <label for="razaoSocial">Razão Social</label>
-                    <input type="text" class="form-control" id="razaoSocial"
-                        placeholder="Digite a razão social da empresa">
-                </div>
-
-
-                <h5>Números de WhatsApp</h5>
-                <div class="form-group">
-                    <label for="whats1">Balcão</label>
-                    <input type="text" class="form-control" id="whats1" placeholder="(00) 00000-0000">
-                </div>
-                <div class="form-group">
-                    <label for="whats2">Entrega</label>
-                    <input type="text" class="form-control" id="whats2" placeholder="(00) 00000-0000">
-                </div>
-                <button id="saveWhats" type="submit" class="btn btn-primary w-25">Salvar</button>
-            </form>
-
-        </div>
-    </div>
-    <footer class="border-top py-4 mt-5 bg-light">
-        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <div class="small text-muted">© <span id="y"></span> Sistema Pedidos via Whatsapp — <a href="#">MTTR
-                    Tecnologia que transforma seu negócio.</a></div>
-            <div class="d-flex gap-3 footer small">
-                <a href="https://wa.me/5561981697924?text=Ol%C3%A1!%20Tenho%20interesse%20para%20marcar%20uma%20reuni%C3%A3o%20para%20entender%20mais%20sobre%20as%20solu%C3%A7%C3%B5es%20que%20voc%C3%AAs%20oferecem!%20"
-                    target="_blank" class="badge badge-secondary m-1">Contato</a>
+    <main>
+        <div class="settings-container mt-4 mb-4">
+            <h2>Configurações</h2>
+            <div id="formConfiguracoes">
+                <section class="mb-4">
+                    <h5>Logo da Empresa</h5>
+                    <img src="/uploads/logo.jpg" alt="Logo atual" id="logoAtual">
+                    <div class="form-group">
+                        <form action="/upload-logo" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="logo" required>
+                            <button type="submit" class="m-2 w-auto text-center btn btn-success ">Salvar Logo</button>
+                        </form>
+                    </div>
+                </section>
+                <form class="mb-4">
+                    <h5>Razão Social</h5>
+                    <div class="form-group">
+                        <label for="razaoSocial">Razão Social</label>
+                        <input type="text" class="form-control" id="razaoSocial"
+                            placeholder="Digite a razão social da empresa">
+                    </div>
+                    <h5>Números de WhatsApp</h5>
+                    <div class="form-group">
+                        <label for="whats1">Balcão</label>
+                        <input type="text" class="form-control" id="whats1" placeholder="(00) 00000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label for="whats2">Entrega</label>
+                        <input type="text" class="form-control" id="whats2" placeholder="(00) 00000-0000">
+                    </div>
+                    <button id="saveWhats" type="submit" class="btn btn-primary w-25">Salvar</button>
+                </form>
             </div>
         </div>
+    </main>
+
+    <footer class="border-top py-4 mt-5">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="small text-muted">© <span id="y"></span> Sistema Pedidos via Whatsapp — <a href="#"
+                    class="link-info">MTTR
+                    Tecnologia que transforma seu negócio.</a></div>
+        </div>
     </footer>
+
+    <!--Links Internos-->
     <script src="/config.js"></script>
     <script src="../js/configWhatsapp.js"></script>
     <script src="/html/auth/js/logout.js"></script>
     <script src="../js/nomeEmpresa.js"></script>
+    <script src="../bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!--Link Externos-->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
         integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
+        
 </body>
 
 </html>
