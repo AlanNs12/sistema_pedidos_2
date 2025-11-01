@@ -23,13 +23,17 @@
   font-style: normal;
 }
 
-html, body {
+html {
     height: 100%;
-    margin: 0;
-    overflow-x: hidden;
 }
+
 body {
+    position: relative;
+    margin: 0;
+    padding-bottom: 7rem; /* Footer height */
+    min-height: 100%;
     margin-top: 4rem;
+    overflow-x: hidden;
 }
 
 main{
@@ -52,8 +56,12 @@ main{
 
 
 footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
     flex-shrink: 0;
-    background-color: #ffffff;;
+    background-color: #ffffff;
 }
 .container-float {
     font-size: 1.0rem;
@@ -258,6 +266,34 @@ footer {
 .item-total {
     font-weight: 600;
     color: var(--success-color);
+}
+
+.settings-container {
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.settings-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.settings-container .form-group {
+    margin-bottom: 15px;
+}
+
+.settings-container .btn {
+    width: 100%;
+}
+
+img#logoAtual {
+    max-height: 120px;
+    display: block;
+    margin: 0 auto 15px auto;
 }
 
 @media (min-width: 820px) {
