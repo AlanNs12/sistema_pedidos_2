@@ -81,6 +81,10 @@ app.use(usuarioRoute);
 const usuarioRoute2 = require("./routes/usuarioRoute2");
 app.use(usuarioRoute2);
 
+const pedidoRoutesV2 = require("./routes/pedidosRoutesV2");
+app.use(pedidoRoutesV2);
+
+
 // Rotas de páginas
 
 app.get("/", (req, res) => {

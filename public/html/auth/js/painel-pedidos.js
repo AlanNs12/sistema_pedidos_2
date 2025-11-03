@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // pedidos pedentes
 document.addEventListener("DOMContentLoaded", function () {
-  fetch(`${BASE_URL}/pedidos/listar`)
+  fetch(`${BASE_URL}/v2/pedidos/listar`)
     .then((res) => res.json())
     .then((dados) => {
       const corpoTabela = document.getElementById("corpoTabela");
@@ -53,9 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
           <td class="text-center">${formatarMoeda(dado.pvvl)}</td>
           <td class="text-center">
             <div class="d-flex justify-content-center align-items-center gap-2">
-              <button type="button" class="btn btn-primary btn-sm" onclick="abriDetalhePedido(${
-                dado.pvcod
-              })">
+              <button type="button" class="btn btn-primary btn-sm" onclick="abriDetalhePedido(${dado.pvcod
+          })">
                 <i class="bi bi-search"></i>
               </button>
             </div>          
@@ -98,11 +97,10 @@ async function abriDetalhePedido(pvcod, status = "pendentes") {
           </div>
           <div class="modal-footer">
             <button type="button" id="btnCancelarPedidoModal" class="btn btn-danger">Cancelar Pedido</button>
-            ${
-              status !== "confirmados"
-                ? '<button type="button" id="btnConfirmarPedidoModal" class="btn btn-success">Confirmar Pedido</button>'
-                : ""
-            }
+            ${status !== "confirmados"
+        ? '<button type="button" id="btnConfirmarPedidoModal" class="btn btn-success">Confirmar Pedido</button>'
+        : ""
+      }
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
           </div>
         </div>
@@ -115,14 +113,14 @@ async function abriDetalhePedido(pvcod, status = "pendentes") {
 
     const linhasItens = pedido.length
       ? pedido
-          .map((it, i) => {
-            const descricao = it.prodes || "";
-            const qtd = it.pviqtde ?? 0;
-            const preco = it.pvivl ?? 0;
-            const subtotal = it.pvivl * it.pviqtde ?? 0;
-            const procod = it.pviprocod || 0;
-            const pv = it.pvcod || pvcod;
-            return `<tr>
+        .map((it, i) => {
+          const descricao = it.prodes || "";
+          const qtd = it.pviqtde ?? 0;
+          const preco = it.pvivl ?? 0;
+          const subtotal = it.pvivl * it.pviqtde ?? 0;
+          const procod = it.pviprocod || 0;
+          const pv = it.pvcod || pvcod;
+          return `<tr>
               <td class="text-center" data-procod="${procod}">${i + 1}</td>
               <td>${descricao}</td>
               <td style="padding: 0.2rem;">
@@ -141,8 +139,8 @@ async function abriDetalhePedido(pvcod, status = "pendentes") {
                 </button>
               </td>
             </tr>`;
-          })
-          .join("")
+        })
+        .join("")
       : `<tr><td colspan="6" class="text-center">Nenhum item encontrado</td></tr>`;
 
     const totalPedido = pedido.reduce(
@@ -171,11 +169,10 @@ async function abriDetalhePedido(pvcod, status = "pendentes") {
               <th colspan="4" class="text-end">Total</th>
               <th class="text-end">${formatarMoeda(totalPedido)}</th>
             </tr>
-            ${
-              pedido.pvobs
-                ? `<tr><td colspan="5"><strong>Obs:</strong> ${pedido.pvobs}</td></tr>`
-                : ""
-            }
+            ${pedido.pvobs
+        ? `<tr><td colspan="5"><strong>Obs:</strong> ${pedido.pvobs}</td></tr>`
+        : ""
+      }
           </tfoot>
         </table>
       </div>
@@ -201,14 +198,17 @@ async function abriDetalhePedido(pvcod, status = "pendentes") {
 
     if (newBtnConfirm) {
       newBtnConfirm.addEventListener("click", async () => {
+
         try {
-          // pega todas as linhas de itens
+
+          // // pega todas as linhas de itens
           const linhas = modalEl.querySelectorAll("tbody tr");
           const itens = [];
-
+          console.log("Linhas de itens:", linhas);
           linhas.forEach((tr) => {
             const cellProcod = tr.querySelector("[data-procod]");
             const inputQtd = tr.querySelector(".qtd-input");
+
 
             // garante que ambos existam
             if (cellProcod && inputQtd) {
@@ -220,16 +220,23 @@ async function abriDetalhePedido(pvcod, status = "pendentes") {
 
           // confirma cada item do pedido
           for (const item of itens) {
-            await confirmarPedido(pvcod, item.qtd, item.procod);
+            await confirmarItensPedido(pvcod, item.qtd, item.procod);
           }
 
           // fecha o modal ao fim
           const m = bootstrap.Modal.getInstance(modalEl);
           m.hide();
+          await confirmarPedido(pvcod);
+          
         } catch (err) {
           console.error("Erro ao confirmar via modal:", err);
           alert("Erro ao confirmar pedido.");
         }
+        finally {
+          window.location.reload();
+
+        }
+        
       });
     }
 
@@ -237,7 +244,7 @@ async function abriDetalhePedido(pvcod, status = "pendentes") {
       newBtnCancel.addEventListener("click", async () => {
         if (!confirm("Tem certeza que deseja cancelar este pedido?")) return;
         try {
-          await cancelarItem(pvcod);
+          await cancelarPv(pvcod);
           const m =
             bootstrap?.Modal?.getInstance(modalEl) ||
             new bootstrap.Modal(modalEl);
@@ -290,8 +297,37 @@ async function cancelarItem(procod, pvcod) {
     alert("Erro ao cancelar o item.");
   }
 }
+
+
+// cancelar Pedido
+async function cancelarPv(pvcod) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/v2/pedidos/cancelar/${pvcod}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pvcod: pvcod }),
+      }
+    );
+    if (response.ok) {
+      alert("Pedido cancelado com sucesso!");
+      location.reload();
+      // Atualize a interface do usuário conforme necessário
+    } else {
+      alert("Erro ao cancelar o Pedido.");
+    }
+  } catch (error) {
+    console.error("Erro ao cancelar o Pedido:", error);
+    alert("Erro ao cancelar o Pedido.");
+  }
+}
+
+
 // confirmação de pedidos
-async function confirmarPedido(pvcod, pviqtde, procod) {
+async function confirmarPedido(pvcod) {
   try {
     const response = await fetch(`${BASE_URL}/pedidos/confirmar/${pvcod}`, {
       method: "PUT",
@@ -299,38 +335,6 @@ async function confirmarPedido(pvcod, pviqtde, procod) {
         "Content-Type": "application/json",
       },
     });
-    if (response.ok) {
-      confirmarItensPedido(pvcod, pviqtde, procod);
-      // Recarrega a tabela de pedidos sem recarregar a página
-      const res = await fetch(`${BASE_URL}/pedidos/listar`);
-      const dados = await res.json();
-      const corpoTabela = document.getElementById("corpoTabela");
-      corpoTabela.innerHTML = ""; // limpa o conteúdo atual da tabela
-
-      dados.forEach((dado) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="text-center">${dado.pvcod}</td>
-          <td class="text-center">${formatarMoeda(dado.pvvl)}</td>
-          <td class="text-center">
-            <div class="d-flex justify-content-center align-items-center gap-2">
-              <button type="button" class="btn btn-primary btn-sm" onclick="abriDetalhePedido(${
-                dado.pvcod
-              })">
-          <i class="bi bi-search"></i>
-              </button>
-            </div>          
-          </td>
-        `;
-        corpoTabela.appendChild(tr);
-        atualizarTotaisPedidos();
-      });
-
-      // alert("Pedido confirmado com sucesso!");
-      // Atualize a interface do usuário conforme necessário
-    } else {
-      // alert("Erro ao confirmar o pedido.");
-    }
   } catch (error) {
     console.error("Erro ao confirmar o pedido:", error);
     alert("Erro ao confirmar o pedido.");
@@ -350,7 +354,7 @@ async function confirmarItensPedido(pvcod, pviqtde, procod) {
       }
     );
     if (response.ok) {
-      alert("Pedido confirmado com sucesso!");
+      console.log("Item confirmado com sucesso!  procod:", procod);
       // alert("Pedido confirmado com sucesso!");
       // Atualize a interface do usuário conforme necessário
     } else {
@@ -384,9 +388,8 @@ async function cancelarPedido(pvcod) {
           <td class="text-center">${formatarMoeda(dado.pvvl)}</td>
           <td class="text-center">
             <div class="d-flex justify-content-center align-items-center gap-2">
-              <button type="button" class="btn btn-primary btn-sm" onclick="abriDetalhePedido(${
-                dado.pvcod
-              }, 'confirmados')">
+              <button type="button" class="btn btn-primary btn-sm" onclick="abriDetalhePedido(${dado.pvcod
+          }, 'confirmados')">
                 <i class="bi bi-search"></i>
               </button>
             </div>          
@@ -422,13 +425,12 @@ document.addEventListener("DOMContentLoaded", function () {
         tr.innerHTML = `
           <td class="text-center" style="color: green;">${dado.pvcod}</td>
           <td class="text-right" style="color: green;">${formatarMoeda(
-            dado.pvvl
-          )}</td>
+          dado.pvvl
+        )}</td>
           <td class="text-center">
             <div class="d-flex justify-content-center align-items-center gap-2">
-              <button type="button" class="btn btn-primary btn-sm" onclick="abriDetalhePedido(${
-                dado.pvcod
-              }, 'confirmados')">
+              <button type="button" class="btn btn-primary btn-sm" onclick="abriDetalhePedido(${dado.pvcod
+          }, 'confirmados')">
                 <i class="bi bi-search"></i>
               </button>
             </div>          

@@ -1,100 +1,65 @@
 <!-- crie uma pagina de login com o nome JP Peças -->
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="title"></title>
-    <!--links internos-->
-    <link rel="stylesheet" href="/html/auth/admin/css/style.css" />
-    <!--links externos-->
-    <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon" />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/uploads/apple-touch-icon.png"
-    />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-      integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD"
-      crossorigin="anonymous"
-    />
-  </head>
 
-  <body class="bg-light">
-    <div class="container">
-      <div class="login-form bg-white shadow-sm p-5 text-center">
-        <img
-          src="/uploads/logo.jpg"
-          alt="Logo JP Peças"
-          width="220"
-          height="220"
-          class="mb-3"
-        />
-        <h2 id="nomeEmpresa">Login -</h2>
-        <form id="formLogin" class="text-left">
-          <div class="form-group">
-            <label for="email" class="text-left w-100">E-mail</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              placeholder="Digite seu e-mail"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="password" class="text-left w-100">Senha</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              placeholder="Digite sua senha"
-              required
-            />
-          </div>
-          <div class="form-check text-left mb-3">
-            <input type="checkbox" class="form-check-input" id="remember" />
-            <label class="form-check-label" for="remember"
-              >Salvar usuário e senha</label
-            >
-          </div>
-          <button type="submit" class="btn btn-primary">Entrar</button>
-          <button class="btn btn-outline-dark" onclick="window.history.back();">
-            <i class="bi bi-box-arrow-in-left"></i> Voltar
-          </button>
-        </form>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="title"></title>
+  <!--links internos-->
+  <link rel="stylesheet" href="/html/auth/admin/css/style-login.css" />
+  <!--links externos-->
+  <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/apple-touch-icon.png" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous" />
+</head>
+
+<body class="bg-light">
+  <div class="container mt-5 col d-flex justify-content-center align-items-center min-vh-100">
+    <div class="login-form bg-white shadow-sm p-5 text-center">
+      <img src="/uploads/logo.jpg" alt="Logo JP Peças" width="220" height="220" class="mb-3" />
+      <h2 id="nomeEmpresa">Login -</h2>
+      <form id="formLogin" class="text-left">
+        <div class="form-group">
+          <label for="email" class="text-left w-100">E-mail</label>
+          <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail" required />
+        </div>
+        <div class="form-group">
+          <label for="password" class="text-left w-100">Senha</label>
+          <input type="password" class="form-control" id="password" placeholder="Digite sua senha" required />
+        </div>
+        <div class="form-check text-left mb-3">
+          <input type="checkbox" class="form-check-input" id="remember" />
+          <label class="form-check-label" for="remember">Salvar usuário e senha</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Entrar</button>
+        <button class="btn btn-outline-dark" onclick="window.history.back();">
+          <i class="bi bi-box-arrow-in-left"></i> Voltar
+        </button>
+      </form>
     </div>
-    <script>
-      // Quando algum campo de input recebe foco, rola até ele
-      document.addEventListener("focusin", function (e) {
-        if (["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName)) {
-          setTimeout(() => {
-            e.target.scrollIntoView({ behavior: "smooth", block: "center" });
-          }, 300);
-        }
-      });
-    </script>
-    <script src="/config.js"></script>
-    <script src="../js/nomeEmpresa.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="/html/auth/js/login.js"></script>
-  </body>
+  </div>
+  <script>
+    // Quando algum campo de input recebe foco, rola até ele
+    document.addEventListener("focusin", function (e) {
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName)) {
+        setTimeout(() => {
+          e.target.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 300);
+      }
+    });
+  </script>
+  <script src="/config.js"></script>
+  <script src="../js/nomeEmpresa.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="/html/auth/js/login.js"></script>
+</body>
+
 </html>
