@@ -9,40 +9,182 @@ function formatarMoeda(valor) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await verificarLogin();
-  fetch(`${BASE_URL}/marcas/`)
-    .then((res) => res.json())
-    .then((dados) => {
-      const holder = document.getElementById("marcaTitulo");
-      if (!holder) return;
-      holder.innerHTML = ""; // zera antes
-
-      let html = '<div class="row g-4">'; // gap entre os itens
-      dados.forEach((dado) => {
-        html += `
-        <style> .brand-btn {
-    border-radius: 12px;
-    transition: all 0.2s ease-in-out;
+  // Se existir, chama verificarLogin()
+  if (typeof verificarLogin === "function") {
+    try {
+      await verificarLogin();
+    } catch (err) {
+      console.error("Erro em verificarLogin:", err);
+    }
   }
-  .brand-btn:hover {
-    background-color: #0d6efd;
-    color: white;
-    transform: translateY(-2px);
-  }
-  </style>
-          <div class="col-6 col-md-4 col-lg-3 px-2 mb-3">
-            <a href="modelo?id=${dado.marcascod}&marcascod=${dado.marcascod}" class="w-100 text-decoration-none">
-              <button class="btn btn-light w-100 shadow-sm py-3 fw-semibold brand-btn">
-                ${dado.marcasdes}
-              </button>
-            </a>
-          </div>`;
-      });
-      html += "</div>";
 
-      holder.innerHTML = html;
-    })
-    .catch(console.error);
+  // ======================================================
+  //  MAPEAMENTO DE MARCAS
+  // ======================================================
+
+  const brandMap = {
+    samsung: { icon: "samsung", domain: "samsung.com" },
+    motorola: { icon: "motorola", domain: "motorola.com" },
+    xiaomi: { icon: "xiaomi", domain: "mi.com" },
+    iphone: { icon: "apple", domain: "apple.com" },
+    apple: { icon: "apple", domain: "apple.com" },
+    realme: { icon: null, domain: "realme.com" },
+    infinix: { icon: null, domain: "infinixmobility.com" },
+    nokia: { icon: "nokia", domain: "nokia.com" },
+    lg: { icon: "lg", domain: "lg.com" },
+    asus: { icon: "asus", domain: "asus.com" },
+    tecnospark: { icon: null, domain: "www.tecno-mobile.com" },
+    itel: { icon: null, domain: "itel-mobile.com" },
+    acessorios: { icon: null, domain: "www.orderup.com.br" },
+    oppo: { icon: "oppo", domain: "oppo.com" },
+    caio: { icon: null, domain: "xvideos.com" },
+    huawei: { icon: "huawei", domain: "huawei.com" },
+  };
+
+  // Normaliza marca (remove acentos, espaços...)
+  function normalize(name) {
+    return String(name || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/\s+/g, "");
+  }
+
+  // Pega o ícone do brandMap
+  function getIconURL(brand) {
+    const slug = normalize(brand);
+    const info = brandMap[slug];
+    if (!info) return "https://cdn.simpleicons.org/cog";
+
+    if (info.icon) return `https://cdn.simpleicons.org/${info.icon}`;
+
+    return `https://www.google.com/s2/favicons?sz=64&domain=${info.domain}`;
+  }
+
+  // ================================================
+  //   LÓGICA DE QUAL LOGO USAR (SEM HEAD!)
+  // ================================================
+
+  function getBrandLogo(brandName) {
+    const slug = normalize(brandName);
+    const info = brandMap[slug];
+
+    // 1) Se tem ícone oficial → usar e NUNCA tentar uploads
+    if (info && info.icon) {
+      return {
+        primary: `https://cdn.simpleicons.org/${info.icon}/000`,
+        isUploaded: false,
+        slug,
+      };
+    }
+
+    // 2) Se não tem ícone mas tem domínio → usar favicon, NUNCA uploads
+    if (info && info.domain) {
+      return {
+        primary: `https://www.google.com/s2/favicons?sz=64&domain=${info.domain}`,
+        isUploaded: false,
+        slug,
+      };
+    }
+
+    // 3) Marca criada pelo usuário → tentar uploads primeiro
+    return {
+      primary: `/uploads/${slug}.jpg`,
+      isUploaded: true,
+      slug,
+    };
+  }
+
+  // ======================================================
+  //  RENDERIZAÇÃO DAS MARCAS NO FRONT
+  // ======================================================
+
+  const holder = document.getElementById("marcaTitulo");
+
+  if (!holder) {
+    console.warn("Elemento #marcaTitulo não encontrado.");
+    return;
+  }
+
+  holder.innerHTML = "";
+
+  try {
+    const res = await fetch(`${BASE_URL}/marcas/`, { credentials: "include" });
+    if (!res.ok) throw new Error("Erro ao buscar marcas: " + res.status);
+
+    const dados = await res.json();
+
+    if (!Array.isArray(dados) || dados.length === 0) {
+      holder.innerHTML = "<p>Nenhuma marca encontrada.</p>";
+      return;
+    }
+
+    const row = document.createElement("div");
+    row.className = "row g-3";
+
+    for (const item of dados) {
+      const isString = typeof item === "string";
+
+      const label = isString
+        ? item
+        : item.marcasdes || item.nome || item.name || item.label || "";
+
+      const code = isString
+        ? ""
+        : item.marcascod || item.id || item.codigo || "";
+
+      const logoInfo = getBrandLogo(label);
+
+      // -----------------------------
+      // CRIA COLUNA
+      // -----------------------------
+
+      const col = document.createElement("div");
+      col.className = "col-6 col-md-4 col-lg-3 brand-col";
+
+      const href =
+        code !== ""
+          ? `modelo?id=${encodeURIComponent(
+              code
+            )}&marcascod=${encodeURIComponent(code)}`
+          : "modelo";
+
+      const link = document.createElement("a");
+      link.className = "brand-link";
+      link.href = href;
+      link.setAttribute("aria-label", label);
+
+      const btn = document.createElement("button");
+      btn.className = "brand-btn";
+      btn.type = "button";
+
+      const img = document.createElement("img");
+      img.src = logoInfo.primary; // tenta logo do uploads
+      img.alt = `${label} logo`;
+      img.loading = "lazy";
+
+      // FALLBACK DE IMG (SEM HEAD)
+      img.onerror = () => {
+        img.onerror = null;
+        img.src = "https://cdn.simpleicons.org/cog/000";
+      };
+
+      const span = document.createElement("span");
+      span.textContent = label;
+
+      btn.appendChild(img);
+      btn.appendChild(span);
+      link.appendChild(btn);
+      col.appendChild(link);
+      row.appendChild(col);
+    }
+
+    holder.appendChild(row);
+  } catch (err) {
+    console.error("Erro ao carregar marcas:", err);
+    holder.innerHTML =
+      "<p>Erro ao carregar marcas. Veja o console para detalhes.</p>";
+  }
 });
 
 const inputPesquisa = document.getElementById("pesquisa");
@@ -162,7 +304,6 @@ inputPesquisa.addEventListener("input", function () {
         filtrados.forEach((modelo) => {
           const item = document.createElement("div");
           item.className = "cart-item";
-          //item.style.maxWidth = "50%"; removido feature do alan
           item.innerHTML = `
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div class="item-name">${modelo.moddes}</div>
@@ -334,7 +475,7 @@ window.adicionarAoCarrinho = async function (procod) {
     }
   } catch (error) {
     console.error("Erro ao buscar cores:", error);
-    alert("Erro ao verificar cores do produto.");
+    showToast("Erro ao verificar cores do produto.", "error");
   }
 };
 
@@ -359,78 +500,105 @@ function exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde) {
   modal.style.boxShadow = "0 2px 10px rgba(0,0,0,0.3)";
   modal.style.zIndex = "9999";
 
+  // Monta HTML do modal incluindo indicação de cores sem estoque (procorsemest === 'S')
   modal.innerHTML = `
-  <style>
-    #modal-cor-container {
-      max-width: 300px;
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    <style>
+      #modal-cor-container {
+        max-width: 300px;
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      #modal-cor-container p {
+        font-size: 16px;
+        margin: 0;
+        font-weight: 600;
+        text-align: center;
+      }
+      #modal-cor-container select {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      #modal-cor-botoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+      #modal-cor-botoes button {
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      #btn-confirmar-cor {
+        background-color: #28a745;
+        color: white;
+      }
+      #btn-confirmar-cor:hover {
+        background-color: #218838;
+      }
+      #btn-cancelar-cor {
+        background-color: #dc3545;
+        color: white;
+      }
+      #btn-cancelar-cor:hover {
+        background-color: #c82333;
+      }
+      #select-cor option[disabled] {
+        color: #888;
+        background: #f5f5f5;
+        font-style: italic;
+      }
+    </style>
 
-    #modal-cor-container p {
-      font-size: 16px;
-      margin: 0;
-      font-weight: 600;
-      text-align: center;
-    }
+    <div id="modal-cor-container">
+      <p>Escolha a cor do produto:</p>
+      <select id="select-cor">
+  ${cores
+    .map((cor) => {
+      const idCor = cor.corcod;
 
-    #modal-cor-container select {
-      width: 100%;
-      padding: 8px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
+      const semEstoque = cor.procorsemest === "S";
+      const label = `${cor.cornome}${semEstoque ? " (Sem estoque)" : ""}`;
 
-    #modal-cor-botoes {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-
-    #modal-cor-botoes button {
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    #btn-confirmar-cor {
-      background-color: #28a745;
-      color: white;
-    }
-
-    #btn-confirmar-cor:hover {
-      background-color: #218838;
-    }
-
-    #btn-cancelar-cor {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    #btn-cancelar-cor:hover {
-      background-color: #c82333;
-    }
-  </style>
-
-  <div id="modal-cor-container">
-    <p>Escolha a cor do produto:</p>
-    <select id="select-cor">
-      ${cores
-        .map((cor) => `<option value="${cor.procod}">${cor.cornome}</option>`)
-        .join("")}
-    </select>
-    <div id="modal-cor-botoes">
-      <button id="btn-cancelar-cor">Cancelar</button>
-      <button id="btn-confirmar-cor">Confirmar</button>
+      return `
+        <option value="${idCor}" data-nome="${cor.cornome}"
+          ${semEstoque ? 'disabled data-semest="S"' : ""}>
+          ${label}
+        </option>
+      `;
+    })
+    .join("")}
+</select>
+      <div id="modal-cor-botoes">
+        <button id="btn-cancelar-cor">Cancelar</button>
+        <button id="btn-confirmar-cor">Confirmar</button>
+      </div>
     </div>
-  </div>
-`;
+    <script>
+      (function(){
+        const select = document.getElementById('select-cor');
+        const confirmBtn = document.getElementById('btn-confirmar-cor');
+        // Se todas as opções estiverem sem estoque, desabilita confirmar
+        if ([...select.options].every(o => o.disabled)) {
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = 'Indisponível';
+          confirmBtn.style.backgroundColor = '#999';
+          confirmBtn.style.cursor = 'not-allowed';
+        } else {
+          // Seleciona automaticamente a primeira opção disponível
+          const firstAvailable = [...select.options].find(o => !o.disabled);
+          if (firstAvailable) firstAvailable.selected = true;
+        }
+      })();
+    </script>
+  `;
 
   document.body.appendChild(backdrop);
   document.body.appendChild(modal);
@@ -442,6 +610,9 @@ function exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde) {
       ].text;
     const idComCor = `${procod}-${corSelecionada}`;
     const nomeComCor = `${nome} (${corSelecionada})`;
+    const idCorSelecionada = Number(document.getElementById("select-cor").value) || null;
+
+    console.log("ID da cor selecionada:", idCorSelecionada);
 
     adicionarProdutoAoCarrinho(
       idComCor,
@@ -450,7 +621,8 @@ function exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde) {
       marca,
       preco,
       qtde,
-      corSelecionada
+      corSelecionada,
+      idCorSelecionada
     );
 
     modal.remove();
@@ -463,6 +635,17 @@ function exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde) {
   };
 }
 
+/**
+ * Adiciona um produto ao carrinho do localStorage
+ * @param {string} id - Identificador único do produto (pode incluir cor)
+ * @param {string} nome - Nome do produto
+ * @param {string} tipo - Tipo do produto
+ * @param {string} marca - Marca do produto
+ * @param {number} preco - Preço do produto
+ * @param {number} qtde - Quantidade a adicionar
+ * @param {string} corSelecionada - Cor selecionada (opcional)
+ * @param {string} idCorSelecionada - ID da cor selecionada (opcional)
+ */
 function adicionarProdutoAoCarrinho(
   id,
   nome,
@@ -470,7 +653,8 @@ function adicionarProdutoAoCarrinho(
   marca,
   preco,
   qtde,
-  corSelecionada
+  corSelecionada,
+  idCorSelecionada
 ) {
   let cart = JSON.parse(localStorage.getItem("cart") || "[]");
   // console.log("cor:", corSelecionada);
@@ -479,7 +663,7 @@ function adicionarProdutoAoCarrinho(
   if (idx > -1) {
     cart[idx].qt += qtde;
   } else {
-    cart.push({ id, nome, tipo, marca, preco, qt: qtde, corSelecionada });
+    cart.push({ id, nome, tipo, marca, preco, qt: qtde, corSelecionada, idCorSelecionada });
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -525,3 +709,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// Botão de instalação PWA
+let deferredPrompt;
+const btnInstall = document.getElementById("btnInstall");
+
+// Captura o evento antes do Chrome exibir o banner nativo
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault(); // impede o banner automático
+  deferredPrompt = e;
+  btnInstall.style.display = "block"; // mostra botão manual
+});
+
+// Quando o usuário clicar no botão
+btnInstall.addEventListener("click", () => {
+  btnInstall.style.display = "none"; // esconde o botão
+  deferredPrompt.prompt(); // dispara o banner nativo
+  deferredPrompt.userChoice.then((choiceResult) => {
+    console.log("Usuário escolheu:", choiceResult.outcome);
+    deferredPrompt = null;
+  });
+});
+
+// Registro do Service Worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js").then(() => {
+    console.log("Service Worker registrado");
+  });
+}

@@ -1,35 +1,20 @@
-name: Deploy via SSH (git pull + systemctl)
+name: Deploy via SSH (systemctl + tag deploy)
 
 on:
   push:
     branches:
-      - main            # dispara a cada push na main
-      - release         # dispara a cada push na release
-  workflow_dispatch:     # ou manualmente no Actions
+      - release         # deploy para ambiente de testes
+      - main
+  pull_request:
+    types: [closed]   # só entra quando PR for fechado (verificamos se foi merged)
+  release:
+    types: [published]  # deploy para produção via Release publicada
+  workflow_dispatch:
 
 jobs:
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Prepare SSH known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
-      - name: Setup SSH key
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-      - name: Run remote deploy scripts
-        run: |
-          ssh -p "${{ secrets.SSH_PORT }}" "root@${{ secrets.SSH_HOST }}" '
-            set -e
-            chmod +x /root/deployJpPecas.sh
-            chmod +x /root/deployUTIdosCelulares.sh
-            /root/deployJpPecas.sh
-            /root/deployUTIdosCelulares.sh
-          '
-
+  # ============================
+  # DEPLOY PARA SERVIDOR DE TESTES
+  # ============================
   release:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
@@ -50,3 +35,169 @@ jobs:
             /root/releaseOrderUp.sh
           '
 
+  # ============================
+  # DEPLOY PARA PRODUÇÃO VIA TAG
+  # ============================
+  deploy_from_tag:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve TAG name
+        id: resolve_tag
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "tag=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Prepare SSH known_hosts (tag deploy)
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Setup SSH key (tag deploy)
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy tag on remote server JP
+        run: |
+          TAG="${{ steps.resolve_tag.outputs.tag }}"
+          echo "Deploying JP tag: $TAG"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p "${{ secrets.SSH_PORT }}" "root@${{ secrets.SSH_HOST }}" "/root/deployJpPecas.sh ${TAG}"
+          
+
+      - name: Deploy tag on remote server UTI
+        run: |
+          TAG="${{ steps.resolve_tag.outputs.tag }}"
+          echo "Deploying UTI tag: $TAG"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p "${{ secrets.SSH_PORT }}" "root@${{ secrets.SSH_HOST }}" "/root/deployUTIdosCelulares.sh ${TAG}"
+   
+
+
+  # ============================
+  # NOTIFICAÇÃO PARA O DISCORD
+  # ============================
+  discord_notify:
+    runs-on: ubuntu-latest
+    # Se preferir que rode APÓS os jobs de deploy, descomente a linha abaixo:
+    # needs: [release, deploy_from_tag]
+    steps:
+      - name: Checkout (to have access to repo info)
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Check PR merged (skip if not)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          if [ "$(jq -r '.pull_request.merged' "$GITHUB_EVENT_PATH")" != "true" ]; then
+            echo "PR not merged — skipping notifications."
+            exit 0
+          fi
+
+      - name: Build and send Discord payload
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+        run: |
+          set -euo pipefail
+
+          esc() {
+            printf '%s' "$1" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g'
+          }
+
+          EVENT="${GITHUB_EVENT_NAME}"
+          REPO="${GITHUB_REPOSITORY}"
+          ACTOR="${GITHUB_ACTOR}"
+          REF="${GITHUB_REF}"
+          TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+          TITLE="GitHub event: ${EVENT}"
+          DESCRIPTION=""
+          URL="https://github.com/${REPO}"
+
+          if [ "${EVENT}" = "push" ]; then
+            BRANCH="${REF##*/}"
+            TITLE="Push to ${BRANCH}"
+            DESCRIPTION=$(jq -r '.commits | map("- " + .message + " (`" + (.id|.[0:7]) + "`) by " + (.author.name//.author.username)) | join("\n")' "${GITHUB_EVENT_PATH}" || echo "")
+            URL="https://github.com/${REPO}/commit/$(jq -r '.after' "${GITHUB_EVENT_PATH}")"
+          elif [ "${EVENT}" = "release" ]; then
+            TAG=$(jq -r '.release.tag_name' "${GITHUB_EVENT_PATH}" || echo "")
+            TITLE="Release ${TAG}"
+            DESCRIPTION=$(jq -r '.release.body // "Sem descrição"' "${GITHUB_EVENT_PATH}" || echo "")
+            URL=$(jq -r '.release.html_url' "${GITHUB_EVENT_PATH}" || echo "https://github.com/${REPO}")
+          elif [ "${EVENT}" = "workflow_dispatch" ]; then
+            TITLE="Manual workflow_dispatch by ${ACTOR}"
+            DESCRIPTION="Disparado manualmente"
+            URL="https://github.com/${REPO}/actions"
+          elif [ "${EVENT}" = "pull_request" ]; then
+            ACTION=$(jq -r '.action' "${GITHUB_EVENT_PATH}" || echo "")
+            PR_TITLE=$(jq -r '.pull_request.title' "${GITHUB_EVENT_PATH}" || echo "")
+            PR_USER=$(jq -r '.pull_request.user.login' "${GITHUB_EVENT_PATH}" || echo "")
+            PR_URL=$(jq -r '.pull_request.html_url' "${GITHUB_EVENT_PATH}" || echo "")
+            TITLE="PR ${ACTION}: ${PR_TITLE}"
+            DESCRIPTION="Autor: ${PR_USER}"
+            URL="${PR_URL}"
+          fi
+
+          # *** ATENÇÃO: heredoc SEM espaços antes do { e SEM aspas no EOF ***
+          # cria payload com jq (mais seguro)
+          PAYLOAD=$(jq -n \
+            --arg title "$TITLE" \
+            --arg url "$URL" \
+            --arg desc "$DESCRIPTION" \
+            --arg repo "$REPO" \
+            --arg actor "$ACTOR" \
+            --arg ref "$REF" \
+            --arg ts "$TIMESTAMP" \
+            '{
+              username: "OrderUp",
+              avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+              embeds: [
+                {
+                  title: $title,
+                  url: $url,
+                  description: $desc,
+                  color: 3447003,
+                  fields: [
+                    { name: "Repositório", value: $repo, inline: true },
+                    { name: "Por", value: $actor, inline: true },
+                    { name: "Ref", value: $ref, inline: true }
+                  ],
+                  timestamp: $ts
+                }
+              ]
+            }' )
+
+          # valida JSON antes de enviar
+          echo "=== PAYLOAD ==="
+          echo "$PAYLOAD" | jq . || (echo "Payload JSON inválido" && exit 1)
+          echo "==============="
+
+          # envia e captura resposta
+          HTTP_RESPONSE=$(mktemp)
+          HTTP_CODE=$(curl -sS -w "%{http_code}" -o "$HTTP_RESPONSE" -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "${WEBHOOK_URL}" || echo "CURL_FAILED")
+
+          echo "HTTP_CODE=${HTTP_CODE}"
+          echo "HTTP_BODY:"
+          cat "$HTTP_RESPONSE" || true
+          rm -f "$HTTP_RESPONSE"
+
+          if [ "$HTTP_CODE" = "CURL_FAILED" ]; then
+            echo "cURL falhou ao tentar contatar o webhook"
+            exit 1
+          fi
+
+          if [ "$HTTP_CODE" != "204" ]; then
+            echo "Aviso: Discord retornou status $HTTP_CODE — verifique a resposta acima."
+          fi

@@ -1,646 +1,919 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="title"></title>
+    <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/uploads/apple-touch-icon.png"
+    />
+    <!--Links proprios-->
+    <link rel="stylesheet" href="/html/auth/admin/css/style-flexbox.css" />
+    <link rel="stylesheet" href="/html/auth/admin/css/style-painel.css" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="title"></title>
-  <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/apple-touch-icon.png" />
-  <!--Links proprios-->
-  <link rel="stylesheet" href="/html/auth/admin/css/style-flexbox.css"/>
-  <link rel="stylesheet" href="/html/auth/admin/css/style-painel.css"/>
-  <link rel="stylesheet" href="/html/auth/admin/css/style-components.css"/>
-  <!--links bootstrap-->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-    integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-</head>
+    <link rel="stylesheet" href="/html/auth/admin/css/style-components.css" />
+    <link rel="stylesheet" href="/html/auth/admin/css/style.css" />
+    <!--links bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <!--Link tema personalizado bootstrap-->
+    <link rel="stylesheet" href="../../../../css/tema-bootstrap.css" />
+    <!--link tema-->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
 
-<body>
-  <div class="wrapper">
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm bg-white rounded p-2 m-1">
-        <a class="navbar-brand" href="index" id="nomeEmpresa"><img src="/uploads/logo.jpg" width="30" height="30"
-            alt="" /></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="index">Inicio<span class="visually-hidden">(Página atual)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="painel">Painel</a>
-            </li>
-            <li class="nav-item" id="pedidos">
-              <a class="nav-link" href="pedidos">Pedidos</a>
-            </li>
-            <li class="nav-item" id="estoque">
-              <a class="nav-link" href="estoque">Estoque</a>
-            </li>
-            <li class="nav-item" id="users">
-              <a class="nav-link" href="users">Usuários</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <i class="bi bi-person-fill"></i> Conta
-              </a>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="perfil">Perfil</a>
-                <a class="dropdown-item" href="configuracoes" id="configuracoes">Configurações</a>
-                <div class="dropdown-divider"></div>
-                <button class="dropdown-item" id="buttonSair">Sair</button>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </header>
-    <main class="bg-light p-3">
-      <div class="container">
-        <div class="panel-hero mb-4">
-          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3">
-            <div class="d-flex align-items-center gap-3">
-              <div class="icon-circle" aria-hidden="true">
-                <i class="bi bi-database-gear text-primary fs-4"></i>
-              </div>
-              <div>
-                <h1 class="h4 mb-0">Painel de Gestão</h1>
-                <div class="text-muted small">
-                  Visão geral rápida — gerencie marcas, modelos, tipos, cores
-                  e produtos
+  <body>
+    <div class="wrapper">
+      <header id="header-admin">
+        <!--Conteudo do header adicionado via JS-->
+      </header>
+      <main class="bg-light p-3">
+        <div class="container">
+          <div class="panel-hero mb-4">
+            <div
+              class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3"
+            >
+              <div class="d-flex align-items-center gap-3">
+                <div class="icon-circle" aria-hidden="true">
+                  <i class="bi bi-database-gear text-primary fs-4"></i>
                 </div>
-              </div>
-            </div>
-
-            <div class="ms-md-auto d-flex flex-wrap gap-2 align-items-center w-50">
-              <!-- Campo de busca -->
-              <div class="flex-grow-1 min-w-0">
-                <div class="input-group search-input shadow-sm rounded">
-                  <span class="input-group-text bg-white border-0">
-                    <i class="bi bi-search"></i>
-                  </span>
-                  <input class="form-control border-0" type="search"
-                    placeholder="Pesquisar por marca, modelo ou peça..." aria-label="Pesquisar" id="pesquisa" />
-                  <button class="btn btn-outline-secondary" type="button" title="Filtrar">
-                    <i class="bi bi-funnel"></i>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Botão -->
-              <div class="flex-shrink-0">
-                <a href="index" class="button-color-1 text-white d-flex align-items-center">
-                  <i class="bi bi-clipboard2-plus-fill me-2"></i>
-                  Novo orçamento
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="mensagemCob"></div>
-
-        <div class="row row-cols-1 row-cols-md-4 g-4 text-start">
-          <div class="col">
-            <div class="card dashboard-card border-0 shadow-sm h-100">
-              <div class="card-body d-flex align-items-center gap-3">
-                <div class="icon-circle bg-grad-1">
-                  <i class="bi bi-tags-fill"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="d-flex justify-content-between align-items-baseline">
-                    <h6 class="mb-1">Marcas</h6>
-                    <!-- <small class="text-success fw-semibold">+4.2%</small> -->
+                <div>
+                  <h1 class="h4 mb-0">Gestão de Produtos</h1>
+                  <div class="text-muted small">
+                    Visão geral rápida — gerencie marcas, modelos, tipos, cores
+                    e produtos
                   </div>
-                  <h3 id="totalMarcas" class="mb-1">0</h3>
-                  <div class="card-sub">Total de marcas cadastradas</div>
-                  <div class="progress mt-2" style="height: 6px">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 32%"></div>
+                </div>
+              </div>
+
+              <div
+                class="ms-md-auto d-flex flex-wrap gap-2 align-items-center w-50"
+              >
+                <!-- Campo de busca -->
+                <div class="flex-grow-1 min-w-0">
+                  <div class="input-group search-input shadow-sm rounded">
+                    <span class="input-group-text bg-white border-0">
+                      <i class="bi bi-search"></i>
+                    </span>
+                    <input
+                      class="form-control border-0"
+                      type="search"
+                      placeholder="Pesquisar por marca, modelo ou peça..."
+                      aria-label="Pesquisar"
+                      id="pesquisa"
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      title="Filtrar"
+                    >
+                      <i class="bi bi-funnel"></i>
+                    </button>
                   </div>
+                </div>
+
+                <!-- Botão -->
+                <div class="flex-shrink-0">
+                  <a
+                    href="index"
+                    class="button-color-1 text-white d-flex align-items-center"
+                  >
+                    <i class="bi bi-clipboard2-plus-fill me-2"></i>
+                    Novo orçamento
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="col">
-            <div class="card dashboard-card border-0 shadow-sm h-100">
-              <div class="card-body d-flex align-items-center gap-3">
-                <div class="icon-circle bg-grad-2">
-                  <i class="bi bi-collection"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="d-flex justify-content-between align-items-baseline">
-                    <h6 class="mb-1">Modelos</h6>
-                    <small class="text-muted">desde mês passado</small>
-                  </div>
-                  <h3 id="totalModelos" class="mb-1">0</h3>
-                  <div class="card-sub">Modelos vinculados às marcas</div>
-                  <div class="progress mt-2" style="height: 6px">
-                    <div class="progress-bar" role="progressbar" style="width: 48%; background: #7c3aed"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div id="mensagemCob"></div>
 
-          <div class="col">
-            <div class="card dashboard-card border-0 shadow-sm h-100">
-              <div class="card-body d-flex align-items-center gap-3">
-                <div class="icon-circle bg-grad-3">
-                  <i class="bi bi-card-checklist"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="d-flex justify-content-between align-items-baseline">
-                    <h6 class="mb-1">Tipos</h6>
-                    <!-- <small class="text-warning fw-semibold">—1.1%</small> -->
-                  </div>
-                  <h3 id="totalTipos" class="mb-1">0</h3>
-                  <div class="card-sub">Tipos de peças configuradas</div>
-                  <div class="progress mt-2" style="height: 6px">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 22%"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="card dashboard-card border-0 shadow-sm h-100">
-              <div class="card-body d-flex align-items-center gap-3">
-                <div class="icon-circle bg-grad-4">
-                  <i class="bi bi-gear-fill"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="d-flex justify-content-between align-items-baseline">
-                    <h6 class="mb-1">Peças</h6>
-                    <!-- <small class="text-success fw-semibold">+9.8%</small> -->
-                  </div>
-                  <h3 id="totalPecas" class="mb-1">0</h3>
-                  <div class="card-sub">Peças ativas no catálogo</div>
-                  <div class="progress mt-2" style="height: 6px">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 68%"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="container mt-5 m-auto" id="cardsArea">
-        <div class="row row-cols-1 row-cols-md-5 g-3 text-center">
-          <div class="col">
-            <div class="manage-card">
-              <div>
-                <div class="card-head">
-                  <div class="icon-circle bg-card-1" aria-hidden="true">
+          <div class="row row-cols-1 row-cols-md-4 g-4 text-start">
+            <div class="col">
+              <div class="card dashboard-card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                  <div class="icon-circle bg-grad-1">
                     <i class="bi bi-tags-fill"></i>
                   </div>
-                  <div class="text-start w-100">
-                    <h5 class="card-title">Marca</h5>
-                    <div class="card-sub">
-                      Gerencie marcas e sua ordem de exibição
+                  <div class="flex-grow-1">
+                    <div
+                      class="d-flex justify-content-between align-items-baseline"
+                    >
+                      <h6 class="mb-1">Marcas</h6>
+                      <!-- <small class="text-success fw-semibold">+4.2%</small> -->
+                    </div>
+                    <h3 id="totalMarcas" class="mb-1">0</h3>
+                    <div class="card-sub">Total de marcas cadastradas</div>
+                    <div class="progress mt-2" style="height: 6px">
+                      <div
+                        class="progress-bar bg-primary"
+                        role="progressbar"
+                        style="width: 32%"
+                      ></div>
                     </div>
                   </div>
                 </div>
-
-                <div class="actions">
-                  <button class="button-color-1" id="dropdownMarca" aria-label="Cadastrar Marca">
-                    <i class="fa-regular fa-square-plus"></i> Cadastrar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="toggleMarcas()"
-                    aria-label="Gerenciar Marcas">
-                    <i class="fa-solid fa-pen-to-square"></i> Gerenciar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="toggleOrdemMarca()"
-                    aria-label="Gerenciar Ordem Marcas">
-                    <i class="fa-solid fa-arrow-up-wide-short"></i> Ordem
-                  </button>
-                </div>
               </div>
             </div>
-          </div>
 
-          <div class="col">
-            <div class="manage-card">
-              <div>
-                <div class="card-head">
-                  <div class="icon-circle bg-card-2" aria-hidden="true">
+            <div class="col">
+              <div class="card dashboard-card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                  <div class="icon-circle bg-grad-2">
                     <i class="bi bi-collection"></i>
                   </div>
-                  <div class="text-start w-100">
-                    <h5 class="card-title">Modelo</h5>
-                    <div class="card-sub">Vincule modelos às marcas</div>
-                  </div>
-                </div>
-
-                <div class="actions">
-                  <button class="button-color-1" id="dropdownModelo" aria-label="Cadastrar Modelo">
-                    <i class="fa-regular fa-square-plus"></i> Cadastrar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="toggleModelos()"
-                    aria-label="Gerenciar Modelos">
-                    <i class="fa-solid fa-pen-to-square"></i> Gerenciar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="toggleOrdemModelo()"
-                    aria-label="Gerenciar Ordem Modelos">
-                    <i class="fa-solid fa-arrow-up-wide-short"></i> Ordem
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="manage-card">
-              <div>
-                <div class="card-head">
-                  <div class="icon-circle bg-card-3" aria-hidden="true">
-                    <i class="bi bi-card-checklist"></i>
-                  </div>
-                  <div class="text-start w-100">
-                    <h5 class="card-title">Tipo de Peça</h5>
-                    <div class="card-sub">Configure tipos e categorias</div>
-                  </div>
-                </div>
-
-                <div class="actions">
-                  <button class="button-color-1" id="dropdownTipo" aria-label="Cadastrar Tipo">
-                    <i class="fa-regular fa-square-plus"></i> Cadastrar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="toggleTipos()"
-                    aria-label="Gerenciar Tipos">
-                    <i class="fa-solid fa-pen-to-square"></i> Gerenciar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="toggleOrdemTipoPeca()"
-                    aria-label="Gerenciar Ordem Tipo">
-                    <i class="fa-solid fa-arrow-up-wide-short"></i> Ordem
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="manage-card">
-              <div>
-                <div class="card-head">
-                  <div class="icon-circle bg-card-4" aria-hidden="true">
-                    <i class="bi bi-palette"></i>
-                  </div>
-                  <div class="text-start w-100">
-                    <h5 class="card-title">Cor</h5>
-                    <div class="card-sub">Cores usadas nos produtos</div>
-                  </div>
-                </div>
-
-                <div class="actions">
-                  <button class="button-color-1" id="dropdownCor" aria-label="Cadastrar Cor">
-                    <i class="fa-regular fa-square-plus"></i> Cadastrar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="toggleCores()"
-                    aria-label="Gerenciar Cores">
-                    <i class="fa-solid fa-pen-to-square"></i> Gerenciar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="manage-card">
-              <div>
-                <div class="card-head">
-                  <div class="icon-circle bg-card-5" aria-hidden="true">
-                    <i class="bi bi-gear-fill"></i>
-                  </div>
-                  <div class="text-start w-100">
-                    <h5 class="card-title">Peça</h5>
-                    <div class="card-sub">
-                      Produtos, preços e cores vinculadas
+                  <div class="flex-grow-1">
+                    <div
+                      class="d-flex justify-content-between align-items-baseline"
+                    >
+                      <h6 class="mb-1">Modelos</h6>
+                      <small class="text-muted">desde mês passado</small>
+                    </div>
+                    <h3 id="totalModelos" class="mb-1">0</h3>
+                    <div class="card-sub">Modelos vinculados às marcas</div>
+                    <div class="progress mt-2" style="height: 6px">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: 48%; background: #7c3aed"
+                      ></div>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="actions">
-                  <button class="button-color-1" id="dropdownProduto" aria-label="Cadastrar Produto">
-                    <i class="fa-regular fa-square-plus"></i> Cadastrar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="togglePecas()"
-                    aria-label="Gerenciar Peças">
-                    <i class="fa-solid fa-pen-to-square"></i> Gerenciar
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="toggleOrdemPeca()"
-                    aria-label="Gerenciar Ordem Peça">
-                    <i class="fa-solid fa-arrow-up-wide-short"></i> Ordem
-                  </button>
+            <div class="col">
+              <div class="card dashboard-card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                  <div class="icon-circle bg-grad-3">
+                    <i class="bi bi-card-checklist"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div
+                      class="d-flex justify-content-between align-items-baseline"
+                    >
+                      <h6 class="mb-1">Tipos</h6>
+                      <!-- <small class="text-warning fw-semibold">—1.1%</small> -->
+                    </div>
+                    <h3 id="totalTipos" class="mb-1">0</h3>
+                    <div class="card-sub">Tipos de peças configuradas</div>
+                    <div class="progress mt-2" style="height: 6px">
+                      <div
+                        class="progress-bar bg-warning"
+                        role="progressbar"
+                        style="width: 22%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card dashboard-card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                  <div class="icon-circle bg-grad-4">
+                    <i class="bi bi-gear-fill"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div
+                      class="d-flex justify-content-between align-items-baseline"
+                    >
+                      <h6 class="mb-1">Peças</h6>
+                      <!-- <small class="text-success fw-semibold">+9.8%</small> -->
+                    </div>
+                    <h3 id="totalPecas" class="mb-1">0</h3>
+                    <div class="card-sub">Peças ativas no catálogo</div>
+                    <div class="progress mt-2" style="height: 6px">
+                      <div
+                        class="progress-bar bg-success"
+                        role="progressbar"
+                        style="width: 68%"
+                      ></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="container">
-        <div id="areaMarcas" class="mt-3 management-area" style="display: none">
-          <h5>Marcas cadastradas</h5>
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Marca</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="listaMarcas"></tbody>
-          </table>
-        </div>
-        <div id="areaModelos" class="mt-3 management-area" style="display: none">
-          <h5>Modelos cadastrados</h5>
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Modelo</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="listaModelos"></tbody>
-          </table>
-        </div>
-        <div id="areaTipos" class="mt-3 management-area" style="display: none">
-          <h5>Tipos cadastrados</h5>
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Tipo</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="listaTipos"></tbody>
-          </table>
-        </div>
-        <div id="areaCores" class="mt-3 management-area" style="display: none">
-          <h5>Cores cadastradas</h5>
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Cor</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="listaCores"></tbody>
-          </table>
-        </div>
-        <div class="mt-3 management-area" id="tabelaArea" style="display: none">
-          <h5>Peças cadastrados</h5>
-          <table class="table table-sm" id="tabelaProdutos">
-            <thead>
-              <tr>
-                <th scope="col">Peça</th>
-                <th scope="col">Valor</th>
-                <th scope="col">Ações</th>
-              </tr>
-            </thead>
-            <tbody id="corpoTabela"></tbody>
-          </table>
-        </div>
-      </div>
 
-      <!-- MARCAS | Modal de detalhe / edição -->
-      <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <form id="marcaForm" class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="userModalLabel">🏷️ Dados da Marca</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body">
-              <input type="hidden" id="usuId" />
-              <div class="mb-3">
-                <label class="form-label">📝 Descrição</label>
-                <div class="password-field">
-                  <input type="text" name="marcasdes" id="descricaoMarca" class="form-control" required />
-                </div>
-                <div class="form-text">
-                  Obs: Essa é parte que parecerá na pagina inicial
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" id="btnDelete" class="btn btn-outline-danger me-auto">
-                Excluir
-              </button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <!-- MODELO | Modal de detalhe / edição -->
-      <div class="modal fade" id="modeloModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <form id="modeloForm" class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="userModalLabel">📱 Dados do Modelo</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body">
-              <input type="hidden" id="usuId" />
-              <div class="mb-3">
-                <label class="form-label">📝 Descrição</label>
-                <div class="password-field">
-                  <input type="text" name="moddes" id="descricaoModelo" class="form-control" required />
-                </div>
-                <div class="form-text">
-                  Obs: Esta descrição será exibida na página Modelo após
-                  selecionar a marca.
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">🏷️ Vincule a uma marca</label>
-                <div class="password-field">
-                  <select name="modmarcascod" id="popupMarcaModalModelo" class="form-control custom-select" required>
-                    <option value="">Selecione a Marca</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <!-- TIPO | Modal de detalhe / edição -->
-      <div class="modal fade" id="tipoModal" tabindex="-1" aria-labelledby="modeloModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <form id="tipoForm" class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modeloModalLabel">📋 Dados do Tipo</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body">
-              <input type="hidden" id="usuId" />
-              <div class="mb-3">
-                <label class="form-label">📝 Descrição</label>
-                <div class="password-field">
-                  <input type="text" name="tipodes" id="descricaoTipo" class="form-control" required />
-                </div>
-                <div class="form-text">
-                  Obs: Essa é parte que parecerá na pagina Tipo após
-                  selecionar o Modelo
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <!-- COR | Modal de detalhe / edição -->
-      <div class="modal fade" id="corModal" tabindex="-1" aria-labelledby="corModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <form id="corForm" class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="corModalLabel">🎨 Dados da Cor</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-
-            <div class="modal-body">
-              <input type="hidden" id="usuId" />
-
-              <div class="mb-3">
-                <label class="form-label">📝 Descrição</label>
-                <div class="password-field">
-                  <input type="text" name="cordes" id="descricaoCor" class="form-control" required />
-                </div>
-                <div class="form-text">
-                  Obs: Essa é parte que parecerá na pagina Peça após
-                  selecionar o Peça que tem cor vinculada
-                </div>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Produto | Modal de detalhe / edição -->
-      <div class="modal fade" id="produtoModal" tabindex="-1" aria-labelledby="produtoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 600px">
-          <form id="produtoForm" class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="produtoModalLabel">
-                📦 Dados do Produto
-              </h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-
-            <div class="modal-body">
-              <input type="hidden" id="usuId" />
-              <div class="mb-3">
-                <label class="form-label">📝 Descrição</label>
+        <div class="container mt-5 m-auto" id="cardsArea">
+          <div class="row row-cols-1 row-cols-md-5 g-3 text-center">
+            <div class="col">
+              <div class="manage-card">
                 <div>
-                  <input type="text" name="prodes" id="descricaoProduto" class="form-control" required />
-                </div>
-                <div class="form-text">
-                  Obs: Esta descrição será exibida na página Peça.
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">💰 Valor</label>
-                <div>
-                  <input type="number" name="provl" id="provl" placeholder="R$ 0,00" class="form-control" min="0"
-                    step="0.01" required />
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">🏷️ Vincule a uma marca</label>
-                <div class="password-field">
-                  <select name="promarcascod" id="popupMarcaModalProduto" class="form-control custom-select" required>
-                    <option value="">Selecione</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">📱 Vincule a um Modelo</label>
-                <div class="password-field">
-                  <select name="promodcod" id="popupProdutoModalModelo" class="form-control custom-select" required>
-                    <option value="">Selecione</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">📋 Vincule a um tipo</label>
-                <div class="password-field">
-                  <select name="protipocod" id="popupProdutoModaltipo" class="form-control custom-select" required>
-                    <option value="">Selecione</option>
-                  </select>
-                </div>
-              </div>
-              <details close>
-                <summary class="mb-2">🎨 Vincule as cores disponíveis do produto</summary>
-                <div class="form-group mb-2">
-                  <div class="custom-select-wrapper" id="selectPainelCor">
-                    <!-- As opções de cor serão inseridas aqui via JS -->
+                  <div class="card-head">
+                    <div class="icon-circle bg-card-1" aria-hidden="true">
+                      <i class="bi bi-tags-fill"></i>
+                    </div>
+                    <div class="text-start w-100">
+                      <h5 class="card-title">Marca</h5>
+                      <div class="card-sub">
+                        Gerencie marcas e sua ordem de exibição
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="actions">
+                    <button
+                      class="button-color-1"
+                      id="dropdownMarca"
+                      aria-label="Cadastrar Marca"
+                    >
+                      <i class="fa-regular fa-square-plus"></i> Cadastrar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="toggleMarcas()"
+                      aria-label="Gerenciar Marcas"
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i> Gerenciar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="toggleOrdemMarca()"
+                      aria-label="Gerenciar Ordem Marcas"
+                    >
+                      <i class="fa-solid fa-arrow-up-wide-short"></i> Ordem
+                    </button>
                   </div>
                 </div>
-              </details>
+              </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
+
+            <div class="col">
+              <div class="manage-card">
+                <div>
+                  <div class="card-head">
+                    <div class="icon-circle bg-card-2" aria-hidden="true">
+                      <i class="bi bi-collection"></i>
+                    </div>
+                    <div class="text-start w-100">
+                      <h5 class="card-title">Modelo</h5>
+                      <div class="card-sub">Vincule modelos às marcas</div>
+                    </div>
+                  </div>
+
+                  <div class="actions">
+                    <button
+                      class="button-color-1"
+                      id="dropdownModelo"
+                      aria-label="Cadastrar Modelo"
+                    >
+                      <i class="fa-regular fa-square-plus"></i> Cadastrar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="toggleModelos()"
+                      aria-label="Gerenciar Modelos"
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i> Gerenciar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="toggleOrdemModelo()"
+                      aria-label="Gerenciar Ordem Modelos"
+                    >
+                      <i class="fa-solid fa-arrow-up-wide-short"></i> Ordem
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </form>
-        </div>
-      </div>
-      
-    </main>
-    <footer class="border-top p-4 bg-white shadow">
-      <div class="align-items-center">
-        <div class="small text-black">
-          © <span id="y"></span> Sistema Pedidos via Whatsapp —
-          <a href="#" class="text-black link-dark">MTTR Tecnologia que transforma seu negócio.</a>
-        </div>
-      </div>
-    </footer>
-  </div>
-  <script src="/config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    crossorigin="anonymous"></script>
-  <script src="../js/nomeEmpresa.js"></script>
-  <script src="html/auth/js/painel.js"></script>
-  <script src="html/auth/js/painel-marca.js"></script>
-  <script src="html/auth/js/painel-modelo.js"></script>
-  <script src="html/auth/js/painel-tipo.js"></script>
-  <script src="html/auth/js/painel-cor.js"></script>
-  <script src="html/auth/js/painel-produto.js"></script>
-  <script src="html/auth/js/logout.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-</body>
+            <div class="col">
+              <div class="manage-card">
+                <div>
+                  <div class="card-head">
+                    <div class="icon-circle bg-card-3" aria-hidden="true">
+                      <i class="bi bi-card-checklist"></i>
+                    </div>
+                    <div class="text-start w-100">
+                      <h5 class="card-title">Tipo de Peça</h5>
+                      <div class="card-sub">Configure tipos e categorias</div>
+                    </div>
+                  </div>
 
+                  <div class="actions">
+                    <button
+                      class="button-color-1"
+                      id="dropdownTipo"
+                      aria-label="Cadastrar Tipo"
+                    >
+                      <i class="fa-regular fa-square-plus"></i> Cadastrar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="toggleTipos()"
+                      aria-label="Gerenciar Tipos"
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i> Gerenciar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="toggleOrdemTipoPeca()"
+                      aria-label="Gerenciar Ordem Tipo"
+                    >
+                      <i class="fa-solid fa-arrow-up-wide-short"></i> Ordem
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="manage-card">
+                <div>
+                  <div class="card-head">
+                    <div class="icon-circle bg-card-4" aria-hidden="true">
+                      <i class="bi bi-palette"></i>
+                    </div>
+                    <div class="text-start w-100">
+                      <h5 class="card-title">Cor</h5>
+                      <div class="card-sub">Cores usadas nos produtos</div>
+                    </div>
+                  </div>
+
+                  <div class="actions">
+                    <button
+                      class="button-color-1"
+                      id="dropdownCor"
+                      aria-label="Cadastrar Cor"
+                    >
+                      <i class="fa-regular fa-square-plus"></i> Cadastrar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="toggleCores()"
+                      aria-label="Gerenciar Cores"
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i> Gerenciar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="manage-card">
+                <div>
+                  <div class="card-head">
+                    <div class="icon-circle bg-card-5" aria-hidden="true">
+                      <i class="bi bi-gear-fill"></i>
+                    </div>
+                    <div class="text-start w-100">
+                      <h5 class="card-title">Peça</h5>
+                      <div class="card-sub">
+                        Produtos, preços e cores vinculadas
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="actions">
+                    <button
+                      class="button-color-1"
+                      id="dropdownProduto"
+                      aria-label="Cadastrar Produto"
+                    >
+                      <i class="fa-regular fa-square-plus"></i> Cadastrar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="togglePecas()"
+                      aria-label="Gerenciar Peças"
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i> Gerenciar
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="toggleOrdemPeca()"
+                      aria-label="Gerenciar Ordem Peça"
+                    >
+                      <i class="fa-solid fa-arrow-up-wide-short"></i> Ordem
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div
+            id="areaMarcas"
+            class="mt-3 management-area"
+            style="display: none"
+          >
+            <h5>Marcas cadastradas</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Marca</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaMarcas"></tbody>
+            </table>
+          </div>
+          <div
+            id="areaModelos"
+            class="mt-3 management-area"
+            style="display: none"
+          >
+            <h5>Modelos cadastrados</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Modelo</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaModelos"></tbody>
+            </table>
+          </div>
+          <div
+            id="areaTipos"
+            class="mt-3 management-area"
+            style="display: none"
+          >
+            <h5>Tipos cadastrados</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaTipos"></tbody>
+            </table>
+          </div>
+          <div
+            id="areaCores"
+            class="mt-3 management-area"
+            style="display: none"
+          >
+            <h5>Cores cadastradas</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Cor</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaCores"></tbody>
+            </table>
+          </div>
+          <div
+            class="mt-3 management-area"
+            id="tabelaArea"
+            style="display: none"
+          >
+            <h5>Peças cadastrados</h5>
+            <table class="table table-sm" id="tabelaProdutos">
+              <thead>
+                <tr>
+                  <th scope="col">Peça</th>
+                  <th scope="col">Valor</th>
+                  <th scope="col">Custo</th>
+                  <th scope="col">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="corpoTabela"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MARCAS | Modal de detalhe / edição -->
+        <div
+          class="modal fade"
+          id="userModal"
+          tabindex="-1"
+          aria-labelledby="userModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">🏷️ Dados da Marca</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+
+              <div class="modal-body">
+                <!-- FORM UNIFICADO: dados + arquivo -->
+                <form
+                  id="marcaForm"
+                  action="/save-marca"
+                  method="POST"
+                  enctype="multipart/form-data"
+                >
+                  <input type="hidden" id="usuId" name="usuId" />
+
+                  <div class="mb-3">
+                    <label class="form-label">📝 Descrição</label>
+                    <input
+                      type="text"
+                      name="descricaoMarca"
+                      id="descricaoMarca"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">📁 Logo da Marca (JPG/PNG)</label>
+                    <div class="input-group">
+                      <input
+                        type="file"
+                        class="form-control"
+                        name="logo-marca"
+                        id="logoMarcaInput"
+                        accept="image/jpeg,image/png"
+                      />
+                    </div>
+                    <div class="form-text">
+                      Obs: Essa é a parte que aparecerá na página inicial. Se
+                      não enviar arquivo, a logo não será alterada.
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  id="btnDelete"
+                  class="btn btn-outline-danger me-auto"
+                >
+                  Excluir
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <!-- botão único que envia tudo -->
+                <button type="submit" form="marcaForm" class="btn btn-primary">
+                  Salvar Dados
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODELO | Modal de detalhe / edição -->
+        <div
+          class="modal fade"
+          id="modeloModal"
+          tabindex="-1"
+          aria-labelledby="userModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <form id="modeloForm" class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">
+                  📱 Dados do Modelo
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Fechar"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="usuId" />
+                <div class="mb-3">
+                  <label class="form-label">📝 Descrição</label>
+                  <div class="password-field">
+                    <input
+                      type="text"
+                      name="moddes"
+                      id="descricaoModelo"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-text">
+                    Obs: Esta descrição será exibida na página Modelo após
+                    selecionar a marca.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">🏷️ Vincule a uma marca</label>
+                  <div class="password-field">
+                    <select
+                      name="modmarcascod"
+                      id="popupMarcaModalModelo"
+                      class="form-control custom-select"
+                      required
+                    >
+                      <option value="">Selecione a Marca</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- TIPO | Modal de detalhe / edição -->
+        <div
+          class="modal fade"
+          id="tipoModal"
+          tabindex="-1"
+          aria-labelledby="modeloModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <form id="tipoForm" class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modeloModalLabel">
+                  📋 Dados do Tipo
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Fechar"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="usuId" />
+                <div class="mb-3">
+                  <label class="form-label">📝 Descrição</label>
+                  <div class="password-field">
+                    <input
+                      type="text"
+                      name="tipodes"
+                      id="descricaoTipo"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-text">
+                    Obs: Essa é parte que parecerá na pagina Tipo após
+                    selecionar o Modelo
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- COR | Modal de detalhe / edição -->
+        <div
+          class="modal fade"
+          id="corModal"
+          tabindex="-1"
+          aria-labelledby="corModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <form id="corForm" class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="corModalLabel">🎨 Dados da Cor</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Fechar"
+                ></button>
+              </div>
+
+              <div class="modal-body">
+                <input type="hidden" id="usuId" />
+
+                <div class="mb-3">
+                  <label class="form-label">📝 Descrição</label>
+                  <div class="password-field">
+                    <input
+                      type="text"
+                      name="cornome"
+                      id="descricaoCor"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-text">
+                    Obs: Essa é parte que parecerá na pagina Peça após
+                    selecionar o Peça que tem cor vinculada
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Produto | Modal de detalhe / edição -->
+        <div
+          class="modal fade"
+          id="produtoModal"
+          tabindex="-1"
+          aria-labelledby="produtoModalLabel"
+          aria-hidden="true"
+        >
+          <div
+            class="modal-dialog modal-dialog-centered"
+            style="max-width: 600px"
+          >
+            <form id="produtoForm" class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="produtoModalLabel">
+                  📦 Dados do Produto
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Fechar"
+                ></button>
+              </div>
+
+              <div class="modal-body">
+                <input type="hidden" id="usuId" />
+                <div class="mb-3">
+                  <label class="form-label">📝 Descrição</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="prodes"
+                      id="descricaoProduto"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-text">
+                    Obs: Esta descrição será exibida na página Peça.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">💰 Valor</label>
+                  <div>
+                    <input
+                      type="number"
+                      name="provl"
+                      id="provl"
+                      placeholder="R$ 0,00"
+                      class="form-control"
+                      min="0"
+                      step="0.01"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">🏷️ Vincule a uma marca</label>
+                  <div class="password-field">
+                    <select
+                      name="promarcascod"
+                      id="popupMarcaModalProduto"
+                      class="form-control custom-select"
+                      required
+                    >
+                      <option value="">Selecione</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">📱 Vincule a um Modelo</label>
+                  <div class="password-field">
+                    <select
+                      name="promodeloscod"
+                      id="popupProdutoModalModelo"
+                      class="form-control custom-select"
+                      required
+                    >
+                      <option value="">Selecione</option>
+                    </select>
+                  </div>
+                  <div class="form-text">
+                    Selecione o modelo compatível com esta peça
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">📋 Vincule a um tipo</label>
+                  <div class="password-field">
+                    <select
+                      name="protipocod"
+                      id="popupProdutoModaltipo"
+                      class="form-control custom-select"
+                      required
+                    >
+                      <option value="">Selecione</option>
+                    </select>
+                  </div>
+                </div>
+                <details close>
+                  <summary class="mb-2">
+                    🎨 Vincule as cores disponíveis do produto
+                  </summary>
+                  <div class="form-group mb-2">
+                    <div class="custom-select-wrapper" id="selectPainelCor">
+                      <!-- As opções de cor serão inseridas aqui via JS -->
+                    </div>
+                  </div>
+                </details>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+      <footer id="footer">
+        <!--Conteudo do footer adicionado via JS-->
+      </footer>
+    </div>
+
+    <script src="html/auth/js/componentes.js"></script>
+    <script src="/config.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../js/nomeEmpresa.js"></script>
+    <script src="html/auth/js/painel.js"></script>
+    <script src="html/auth/js/painel-marca.js"></script>
+    <script src="html/auth/js/painel-modelo.js"></script>
+    <script src="html/auth/js/painel-tipo.js"></script>
+    <script src="html/auth/js/painel-cor.js"></script>
+    <script src="html/auth/js/painel-produto.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  </body>
 </html>

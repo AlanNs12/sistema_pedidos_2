@@ -6,8 +6,9 @@ if (erroMsg === "acesso-negado") {
 if (erroMsg === "modulo-nao-habilitado") {
   alertPersonalizado("Módulo não habilitado para empresa.", 3000);
 }
-const novaURL = window.location.origin; + window.location.pathname;
-window.history.replaceState({}, document.title, novaURL+ '/painel');
+const novaURL = window.location.origin;
++window.location.pathname;
+window.history.replaceState({}, document.title, novaURL + "/painel");
 
 const id = params.get("id");
 let marcascod = null;
@@ -33,8 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
         holder.innerHTML = ""; // zera antes
         let html = '<option value="">Selecione uma marca</option>';
         dados.forEach((marca) => {
-          html += `<option value="${marca.marcascod}"${id == marca.marcascod ? " selected" : ""
-            }>${marca.marcasdes}</option>`;
+          html += `<option value="${marca.marcascod}"${
+            id == marca.marcascod ? " selected" : ""
+          }>${marca.marcasdes}</option>`;
         });
         holder.innerHTML = html;
       })
@@ -108,8 +110,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!holder) return;
         let html = '<option value="">Selecione o tipo</option>';
         dados.forEach((tipo) => {
-          html += `<option value="${tipo.tipocod}"${id == tipo.tipocod ? " selected" : ""
-            }>${tipo.tipodes}</option>`;
+          html += `<option value="${tipo.tipocod}"${
+            id == tipo.tipocod ? " selected" : ""
+          }>${tipo.tipodes}</option>`;
         });
         holder.innerHTML = html;
       })
@@ -128,319 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-// listar cor no painel/criar produto
-// document.addEventListener("DOMContentLoaded", () => {
-//   function carregarCoresPainel() {
-//     fetch(`${BASE_URL}/procores/`)
-//       .then((res) => res.json())
-//       .then((dados) => {
-//         const holder = document.getElementById("selectPainelCor");
-//         if (!holder) return;
-//         holder.innerHTML = ""; // zera antes
-
-//         let html = "<label>Selecione a(s) cor(es):</label><br>";
-//         dados.forEach((cor) => {
-//           html += `
-//             <div class="form-check">
-//               <input class="form-check-input" type="checkbox" name="procor" value="${cor.corcod}" id="cor_${cor.corcod}">
-//               <label class="form-check-label" for="cor_${cor.corcod}">${cor.cornome}</label>
-//             </div>
-//           `;
-//         });
-//         holder.innerHTML = html;
-//       })
-//       .catch(console.error);
-//   }
-
-//   // Carrega inicialmente
-//   carregarCoresPainel();
-
-//   // Carrega novamente ao abrir o dropdown
-//   const dropdownBtn = document.getElementById("dropdownPeca");
-//   if (dropdownBtn) {
-//     dropdownBtn.addEventListener("click", carregarCoresPainel);
-//   }
-// });
-
-// //Função para criar marca
-// document
-//   .getElementById("cadastrarPainelMarca")
-//   .addEventListener("submit", function (e) {
-//     e.preventDefault();
-
-//     const form = e.target;
-//     const formData = new FormData(form);
-//     const data = Object.fromEntries(formData.entries());
-
-//     fetch(`${BASE_URL}/marcas`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(data),
-//     })
-//       .then(async (res) => {
-//         if (res.status === 403) {
-//           throw new Error("403");
-//         }
-//         return res.json();
-//       })
-//       .then(() => {
-//         const msg = document.createElement("div");
-//         msg.textContent = "Marca cadastrada com sucesso!";
-//         msg.style.position = "fixed";
-//         msg.style.top = "20px";
-//         msg.style.left = "50%";
-//         msg.style.transform = "translateX(-50%)";
-//         msg.style.background = "#28a745";
-//         msg.style.color = "#fff";
-//         msg.style.padding = "12px 24px";
-//         msg.style.borderRadius = "6px";
-//         msg.style.zIndex = "10000";
-//         msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-//         document.body.appendChild(msg);
-//         setTimeout(() => {
-//           msg.remove();
-//         }, 2000);
-//         form.reset();
-//       })
-//       .catch((erro) => {
-//         if (erro.message === "403") {
-//           alertPersonalizado("Sem permissão para criar marcas.",2000);
-//         } else {
-//           alert("Erro ao salvar os dados.");
-//         }
-//         console.error(erro);
-//       });
-//   });
-
-// //função para criar modelo
-// document
-//   .getElementById("cadastrarPainelModelo")
-//   .addEventListener("submit", function (e) {
-//     e.preventDefault();
-
-//     const form = e.target;
-//     const formData = new FormData(form);
-//     const data = Object.fromEntries(formData.entries());
-
-//     data.modmarcascod = marcacodModelo;
-
-//     fetch(`${BASE_URL}/modelo`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(data),
-//     })
-//       .then(async (res) => {
-//         if (res.status === 403) {
-//           throw new Error("403");
-//         }
-//         return res.json();
-//       })
-//       .then(() => {
-//         const msg = document.createElement("div");
-//         msg.textContent = "Modelo cadastrado com sucesso!";
-//         msg.style.position = "fixed";
-//         msg.style.top = "20px";
-//         msg.style.left = "50%";
-//         msg.style.transform = "translateX(-50%)";
-//         msg.style.background = "#28a745";
-//         msg.style.color = "#fff";
-//         msg.style.padding = "12px 24px";
-//         msg.style.borderRadius = "6px";
-//         msg.style.zIndex = "10000";
-//         msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-//         document.body.appendChild(msg);
-//         setTimeout(() => {
-//           msg.remove();
-//         }, 2000);
-//         form.reset();
-//       })
-//       .catch((erro) => {
-//         if (erro.message === "403") {
-//           alertPersonalizado("Sem permissão para criar Modelo.",2000);
-//         } else {
-//           alert("Erro ao salvar os dados.");
-//         }
-//         console.error(erro);
-//       });
-//   });
-
-//função para criar tipo
-// document
-//   .getElementById("cadastrarPainelTipo")
-//   .addEventListener("submit", function (e) {
-//     e.preventDefault();
-
-//     const form = e.target;
-//     const formData = new FormData(form);
-//     const data = Object.fromEntries(formData.entries());
-
-//     fetch(`${BASE_URL}/tipo`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(data),
-//     })
-//       .then(async (res) => {
-//         if (res.status === 403) {
-//           throw new Error("403");
-//         }
-//         return res.json();
-//       })
-//       .then(() => {
-//         const msg = document.createElement("div");
-//         msg.textContent = "Tipo cadastrado com sucesso!";
-//         msg.style.position = "fixed";
-//         msg.style.top = "20px";
-//         msg.style.left = "50%";
-//         msg.style.transform = "translateX(-50%)";
-//         msg.style.background = "#28a745";
-//         msg.style.color = "#fff";
-//         msg.style.padding = "12px 24px";
-//         msg.style.borderRadius = "6px";
-//         msg.style.zIndex = "10000";
-//         msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-//         document.body.appendChild(msg);
-//         setTimeout(() => {
-//           msg.remove();
-//         }, 2000);
-//         form.reset();
-//       })
-//       .catch((erro) => {
-//         if (erro.message === "403") {
-//           alertPersonalizado("Sem permissão para criar Tipo de Peças.",2000);
-//         } else {
-//           alert("Erro ao salvar os dados.");
-//         }
-//         console.error(erro);
-//       });
-//   });
-
-//função para criar cor
-// document
-//   .getElementById("cadastrarPainelCor")
-//   .addEventListener("submit", function (e) {
-//     e.preventDefault();
-
-//     const form = e.target;
-//     const formData = new FormData(form);
-//     const data = Object.fromEntries(formData.entries());
-
-//     fetch(`${BASE_URL}/cores`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(data),
-//     })
-//       .then(async (res) => {
-//         if (res.status === 403) {
-//           throw new Error("403");
-//         }
-//         return res.json();
-//       })
-//       .then(() => {
-//         const msg = document.createElement("div");
-//         msg.textContent = "cor cadastrado com sucesso!";
-//         msg.style.position = "fixed";
-//         msg.style.top = "20px";
-//         msg.style.left = "50%";
-//         msg.style.transform = "translateX(-50%)";
-//         msg.style.background = "#28a745";
-//         msg.style.color = "#fff";
-//         msg.style.padding = "12px 24px";
-//         msg.style.borderRadius = "6px";
-//         msg.style.zIndex = "10000";
-//         msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-//         document.body.appendChild(msg);
-//         setTimeout(() => {
-//           msg.remove();
-//         }, 2000);
-//         form.reset();
-//       })
-//       .catch((erro) => {
-//         if (erro.message === "403") {
-//           alertPersonalizado("Sem permissão para criar Cor.",2000);
-//         } else {
-//           alert("Erro ao salvar os dados.");
-//         }
-//         console.error(erro);
-//       });
-//   });
-
-//função para criar PRODUTO
-// document
-//   .getElementById("cadastrarPainelPeca")
-//   .addEventListener("submit", async function (e) {
-//     e.preventDefault();
-
-//     const form = e.target;
-//     const formData = new FormData(form);
-//     const data = Object.fromEntries(formData.entries());
-
-//     data.promarcascod = marcascod;
-//     data.promodcod = modelo;
-//     data.protipocod = tipo;
-
-//     // Pega todos os checkboxes marcados de cor
-//     const corCheckboxes = document.querySelectorAll(
-//       '#selectPainelCor input[type="checkbox"]:checked'
-//     );
-//     const corIds = Array.from(corCheckboxes).map((cb) => cb.value);
-//     try {
-//       // Cria o produto
-//       const res = await fetch(`${BASE_URL}/pro`, {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       });
-//       if (res.status === 403) {
-//         throw new Error("403");
-//       }
-//       const resposta = await res.json();
-//       let procod =
-//         resposta.procod || (Array.isArray(resposta) && resposta[0]?.procod);
-//       if (!procod) {
-//         throw new Error("Resposta inválida ao criar produto");
-//       } else {
-//         const msg = document.createElement("div");
-//         msg.textContent = "Produto cadastrado com sucesso!";
-//         msg.style.position = "fixed";
-//         msg.style.top = "20px";
-//         msg.style.left = "50%";
-//         msg.style.transform = "translateX(-50%)";
-//         msg.style.background = "#28a745";
-//         msg.style.color = "#fff";
-//         msg.style.padding = "12px 24px";
-//         msg.style.borderRadius = "6px";
-//         msg.style.zIndex = "10000";
-//         msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-//         document.body.appendChild(msg);
-//         setTimeout(() => {
-//           msg.remove();
-//         }, 2000);
-//       }
-
-//       // Grava as cores disponíveis se houver cores marcadas e procod válido
-//       if (procod && corIds.length > 0) {
-//         // Para cada cor marcada, faz um POST individual
-//         for (const corcod of corIds) {
-//           await fetch(
-//             `${BASE_URL}/proCoresDisponiveis/${procod}?corescod=${corcod}`,
-//             {
-//               method: "POST",
-//               headers: { "Content-Type": "application/json" },
-//             }
-//           );
-//         }
-//       }
-//       //console.log(resposta);
-//       form.reset();
-//     } catch (erro) {
-//       if (erro.message === "403") {
-//           alertPersonalizado("Sem permissão para criar produtos.",2000);
-//         } else {
-//           alert("Erro ao criar produto.");
-//         }
-//         console.error(erro);
-//     }
-//   });
 
 const inputPesquisa = document.getElementById("pesquisa");
 const tabelaArea = document.getElementById("tabelaArea");
@@ -462,7 +152,7 @@ inputPesquisa.addEventListener("input", function () {
     .then((produtos) => {
       const filtrados = produtos.filter(
         (produto) =>
-          produto.prodes && produto.prodes.toLowerCase().includes(pesquisa)
+          produto.prodes && produto.prodes.toLowerCase().includes(pesquisa),
       );
 
       if (filtrados.length === 0) {
@@ -480,13 +170,16 @@ inputPesquisa.addEventListener("input", function () {
         tr.innerHTML = `
           <td>${produto.prodes}</td>
           <td>${formatarMoeda(produto.provl)}</td>
+          <td>${formatarMoeda(produto.procusto)}</td>
           <td>
-            <button class="btn btn-primary btn-sm" onclick="editarProduto('${produto.procod
-          }')">
+            <button class="btn btn-primary btn-sm" onclick="editarProduto('${
+              produto.procod
+            }')">
               <i class="fa fa-edit"></i>
             </button>
-            <button class="btn btn-danger btn-sm" onclick="excluirProduto('${produto.procod
-          }')">
+            <button class="btn btn-danger btn-sm" onclick="excluirProduto('${
+              produto.procod
+            }')">
               <i class="fa fa-trash"></i>
             </button>
           </td>
@@ -506,173 +199,268 @@ inputPesquisa.addEventListener("input", function () {
 });
 
 function editarProduto(codigo) {
-  Promise.all([
-    fetch(`${BASE_URL}/pro/painel/${codigo}`).then((r) => r.json()),
-    fetch(`${BASE_URL}/procores`).then((r) => r.json()),
-    fetch(`${BASE_URL}/proCoresDisponiveis/${codigo}`).then((r) => r.json()),
-  ])
+  // First fetch the product to get the brand ID
+  fetch(`${BASE_URL}/pro/painel/${codigo}`)
+    .then((r) => r.json())
+    .then((produto) => {
+      // Now fetch remaining data
+      return Promise.all([
+        Promise.resolve(produto),
+        fetch(`${BASE_URL}/procores`).then((r) => r.json()),
+        fetch(`${BASE_URL}/proCoresDisponiveis/${codigo}`).then((r) =>
+          r.json(),
+        ),
+      ]);
+    })
     .then(([produto, coresDisponiveis, coresProduto]) => {
-      // Cria o popup
+      // ------------------------------
+      // POPUP
+      // ------------------------------
       let popup = document.createElement("div");
       popup.id = "popupEditarProduto";
-      popup.style.position = "fixed";
-      popup.style.top = "0";
-      popup.style.left = "0";
-      popup.style.width = "100vw";
-      popup.style.height = "100vh";
-      popup.style.background = "rgba(0,0,0,0.5)";
-      popup.style.display = "flex";
-      popup.style.alignItems = "center";
-      popup.style.justifyContent = "center";
-      popup.style.zIndex = "9999";
+      popup.style = `
+        position:fixed;top:0;left:0;width:100vw;height:100vh;
+        background:rgba(0,0,0,0.5);display:flex;
+        align-items:center;justify-content:center;z-index:9999;
+      `;
 
-      // Preenche os campos com os dados carregados do produto
       popup.innerHTML = `
         <div style="
-            background:#fff;
-            padding:24px;
-            border-radius:8px;
-            min-width:300px;
-            max-width:90vw;
-            max-height:90vh;   /* limite de altura */
-            overflow-y:auto;   /* cria scroll se passar do limite */
+          background:#fff;padding:24px;border-radius:8px;
+          min-width:300px;width:40vw;max-height:80vh;overflow:auto;
         ">
-          <h5>Editar Produto</h5>
+          <h5>📦 Editar Produto</h5>
+          <hr>
+
           <form id="formEditarProduto">
+
             <div class="mb-3">
-              <label for="editarDescricao" class="form-label">Descrição</label>
-              <input type="text" class="form-control" id="editarDescricao" name="prodes" 
-                value="${produto[0].prodes || ""}" required>
+              <label class="form-label">📝 Descrição</label>
+              <input type="text" class="form-control" id="editarDescricao" required
+                value="${produto[0]?.prodes || ""}">
             </div>
+
             <div class="mb-3">
-              <label for="editarValor" class="form-label">Valor</label>
-              <input type="number" step="0.01" class="form-control" id="editarValor" name="provl" 
-                value="${Number(produto[0].provl).toFixed(2) || ""}" required>
+              <label class="form-label">💰 Valor</label>
+              <input type="number" step="0.01" class="form-control" id="editarValor" required
+                value="${Number(produto[0]?.provl).toFixed(2) || ""}">
             </div>
-            <div class="mb-3" id="editarProdutoCores">
-              <label>Selecione a(s) cor(es):</label><br>
-              ${coresDisponiveis
-          .map(
-            (c) => `
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="procor" value="${c.corcod
-              }"
-                  id="editar_cor_${c.corcod}" 
-                  ${coresProduto.some((cp) => cp.corcod == c.corcod)
-                ? "checked"
-                : ""
-              }>
-                <label class="form-check-label" for="editar_cor_${c.corcod}">${c.cornome
-              }</label>
-              </div>`
-          )
-          .join("")}
+
+            <div class="mb-3">
+              <label class="form-label">📥 Produto sem estoque</label><br>
+              <input type="checkbox" id="editar_prosemest"
+                ${produto.some((p) => p.prosemest === "S") ? "checked" : ""}>
+              <label for="editar_prosemest">Sem estoque geral</label>
             </div>
-            <div style="display:flex;gap:8px;justify-content:flex-end;">
-              <button type="button" class="btn btn-secondary" id="cancelarEditarProduto">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
+
+            <div class="mb-3">
+              <label class="form-label">📥 Produto acabando</label><br>
+              <input type="checkbox" id="editar_proacabando"
+                ${produto.some((p) => p.proacabando === "S") ? "checked" : ""}>
+              <label for="editar_proacabando">Produto acabando</label>
             </div>
+
+            <details>
+              <summary class="mb-2">🎨 Vincule as cores do produto</summary>
+              <div id="editarProdutoCores" style="max-height:220px;overflow:auto;padding-right:8px;">
+                ${coresDisponiveis
+                  .map((c) => {
+                    const ligada = coresProduto.some(
+                      (cp) => cp.corcod == c.corcod,
+                    );
+                    const semEst = coresProduto.some(
+                      (cp) => cp.corcod == c.corcod && cp.procorsemest === "S",
+                    );
+
+                    return `
+                    <div class="form-check row align-items-center py-1" data-cor="${
+                      c.corcod
+                    }">
+                      <div class="col-6">
+                        <input type="checkbox" class="form-check-input checkbox-cor"
+                          value="${c.corcod}" id="editar_cor_${c.corcod}"
+                          ${ligada ? "checked" : ""}>
+                        <label class="form-check-label" for="editar_cor_${
+                          c.corcod
+                        }">
+                          ${c.cornome}
+                        </label>
+                      </div>
+
+                      <div class="col-6">
+                        <input type="checkbox" class="form-check-input checkbox-cor-semest"
+                          data-cor-semest="${c.corcod}"
+                          id="editar_cor_semest_${c.corcod}"
+                          ${semEst ? "checked" : ""}
+                          ${!ligada ? "disabled" : ""}>
+                        <label class="form-check-label" for="editar_cor_semest_${
+                          c.corcod
+                        }">
+                          Sem estoque
+                        </label>
+                      </div>
+                    </div>
+                  `;
+                  })
+                  .join("")}
+              </div>
+            </details>
+
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+              <button type="button" class="btn btn-secondary" id="cancelarEditarProduto">
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Salvar
+              </button>
+            </div>
+
           </form>
         </div>
       `;
 
       document.body.appendChild(popup);
 
-      document.getElementById("cancelarEditarProduto").onclick = function () {
-        document.body.removeChild(popup);
+      document.getElementById("cancelarEditarProduto").onclick = () => {
+        popup.remove();
       };
 
-      document.getElementById("formEditarProduto").onsubmit = async function (
-        e
-      ) {
-        e.preventDefault();
-        const prodes = document.getElementById("editarDescricao").value.trim();
-        const provl = document.getElementById("editarValor").value;
-        const corCheckboxes = popup.querySelectorAll(
-          '#editarProdutoCores input[type="checkbox"]'
-        );
-        const selecionadas = Array.from(corCheckboxes)
-          .filter((cb) => cb.checked)
-          .map((cb) => cb.value);
-        const anteriores = coresProduto
-          .filter((c) => c.corcod != null)
-          .map((c) => String(c.corcod));
+      // ------------------------------
+      // HABILITA / DESABILITA "sem estoque" por cor
+      // ------------------------------
+      popup.querySelectorAll(".checkbox-cor").forEach((ch) => {
+        ch.addEventListener("change", () => {
+          const cor = ch.value;
+          const semEst = popup.querySelector(`#editar_cor_semest_${cor}`);
+          if (!semEst) return;
 
-        try {
-          const res = await fetch(`${BASE_URL}/pro/${codigo}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prodes, provl }),
-          });
-          if (res.status === 403) {
-            throw new Error("403");
+          if (ch.checked) semEst.disabled = false;
+          else {
+            semEst.checked = false;
+            semEst.disabled = true;
           }
-
-          // adiciona novas cores
-          for (const cor of selecionadas) {
-            if (!anteriores.includes(cor)) {
-              await fetch(
-                `${BASE_URL}/proCoresDisponiveis/${codigo}?corescod=${cor}`,
-                {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                }
-              );
-            }
-          }
-          // remove cores desmarcadas
-          for (const cor of anteriores) {
-            if (!selecionadas.includes(cor)) {
-              await fetch(
-                `${BASE_URL}/proCoresDisponiveis/${codigo}?corescod=${cor}`,
-                { method: "DELETE" }
-              );
-            }
-          }
-
-          const msg = document.createElement("div");
-          msg.textContent = "Produto atualizado com sucesso!";
-          msg.style.position = "fixed";
-          msg.style.top = "20px";
-          msg.style.left = "50%";
-          msg.style.transform = "translateX(-50%)";
-          msg.style.background = "#28a745";
-          msg.style.color = "#fff";
-          msg.style.padding = "12px 24px";
-          msg.style.borderRadius = "6px";
-          msg.style.zIndex = "10000";
-          msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-          document.body.appendChild(msg);
-          setTimeout(() => {
-            msg.remove();
-          }, 2000);
-          document.body.removeChild(popup);
-          carregarProPesquisa();
-        } catch (erro) {
-          if (erro.message === "403") {
-            document.body.removeChild(popup);
-            alertPersonalizado("Sem permissão para editar produtos.",2000);
-          } else {
-            document.body.removeChild(popup);
-            alertPersonalizado("Erro ao atualizar o produto.",2000);
-          }
-        }
-      };
-
-      const inputValor = document.getElementById("editarValor");
-
-      inputValor.addEventListener("input", function (e) {
-        let value = e.target.value.replace(/\D/g, "");
-        value = (parseInt(value, 10) / 100).toFixed(2);
-        e.target.value = value.toLocaleString("pt-BR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
         });
       });
+
+      // -----------------------------------------
+      // SUBMIT (SEM MODELO)
+      // -----------------------------------------
+      popup
+        .querySelector("#formEditarProduto")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const prodes = document
+            .getElementById("editarDescricao")
+            .value.trim();
+          const provl = document.getElementById("editarValor").value;
+          const prosemest = document.getElementById("editar_prosemest").checked
+            ? "S"
+            : "N";
+          const proacabando = document.getElementById("editar_proacabando")
+            .checked
+            ? "S"
+            : "N";
+
+          // Mapa com estado anterior
+          const anterioresMap = {};
+          coresProduto.forEach((cp) => {
+            if (cp.corcod !== null && cp.corcod !== undefined) {
+              anterioresMap[String(cp.corcod)] =
+                cp.procorsemest === "S" ? "S" : "N";
+            }
+          });
+
+          // Estado atual
+          const linhas = popup.querySelectorAll(
+            "#editarProdutoCores .form-check",
+          );
+          const atuais = [];
+          linhas.forEach((l) => {
+            const corCheck = l.querySelector(".checkbox-cor");
+            const semEstCheck = l.querySelector(".checkbox-cor-semest");
+            if (corCheck && corCheck.checked) {
+              atuais.push({
+                corcod: corCheck.value,
+                procorsemest: semEstCheck?.checked ? "S" : "N",
+              });
+            }
+          });
+
+          try {
+            // Atualiza dados básicos do produto
+            await fetch(`${BASE_URL}/pro/${codigo}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                prodes,
+                provl,
+                prosemest,
+                proacabando,
+              }),
+            });
+
+            // Cores novas ou atualizadas
+            for (const c of atuais) {
+              if (!anterioresMap[c.corcod]) {
+                const addResponse = await fetch(
+                  `${BASE_URL}/proCoresDisponiveis/${codigo}?corescod=${c.corcod}&procorsemest=${c.procorsemest}`,
+                  { method: "POST" },
+                );
+                if (!addResponse.ok) {
+                  const errorData = await addResponse.json();
+                  throw new Error(errorData.erro || "Erro ao adicionar cor");
+                }
+              } else if (anterioresMap[c.corcod] !== c.procorsemest) {
+                await fetch(
+                  `${BASE_URL}/proCoresDisponiveis/${codigo}?` +
+                    `corescod=${c.corcod}` +
+                    `&procorsemest=${anterioresMap[c.corcod]}` +
+                    `&corescodnovo=${c.corcod}` +
+                    `&procorsemestnovo=${c.procorsemest}`,
+                  { method: "PUT" },
+                );
+              }
+            }
+
+            // Remover cores que foram desmarcadas
+            for (const corAnterior of Object.keys(anterioresMap)) {
+              if (!atuais.some((a) => a.corcod === corAnterior)) {
+                const deleteResponse = await fetch(
+                  `${BASE_URL}/proCoresDisponiveis/${codigo}?corescod=${corAnterior}`,
+                  { method: "DELETE" },
+                );
+                if (!deleteResponse.ok) {
+                  const errorData = await deleteResponse.json();
+                  throw new Error(errorData.erro || "Erro ao remover cor");
+                }
+              }
+            }
+
+            // Aviso de sucesso
+            const msg = document.createElement("div");
+            msg.textContent = "Produto atualizado com sucesso!";
+            msg.style = `
+            position:fixed;top:20px;left:50%;transform:translateX(-50%);
+            background:#28a745;color:#fff;padding:12px 24px;border-radius:6px;
+            z-index:10000;box-shadow:0 2px 8px rgba(0,0,0,0.2);
+          `;
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 2000);
+
+            popup.remove();
+            carregarProPesquisa();
+          } catch (erro) {
+            popup.remove();
+            alertPersonalizado(
+              erro.message || "Erro ao atualizar o produto.",
+              3000,
+            );
+          }
+        });
     })
-    .catch((erro) => {
-      alert("Erro ao buscar os dados do produto.");
-      console.error(erro);
+    .catch(() => {
+      alert("Erro ao buscar dados do produto.");
     });
 }
 
@@ -682,7 +470,7 @@ function carregarProPesquisa() {
     .then((produtos) => {
       const filtrados = produtos.filter(
         (produto) =>
-          produto.prodes && produto.prodes.toLowerCase().includes(pesquisa)
+          produto.prodes && produto.prodes.toLowerCase().includes(pesquisa),
       );
       corpoTabela.innerHTML = "";
       filtrados.forEach((produto) => {
@@ -692,13 +480,16 @@ function carregarProPesquisa() {
         tr.innerHTML = `
           <td>${produto.prodes}</td>
           <td>${formatarMoeda(produto.provl)}</td>
+          <td>${formatarMoeda(produto.procusto)}</td>
           <td>
-            <button class="btn btn-primary btn-sm" onclick="editarProduto('${produto.procod
-          }')">
+            <button class="btn btn-primary btn-sm" onclick="editarProduto('${
+              produto.procod
+            }')">
               <i class="fa fa-edit"></i>
             </button>
-            <button class="btn btn-danger btn-sm" onclick="excluirProduto('${produto.procod
-          }')">
+            <button class="btn btn-danger btn-sm" onclick="excluirProduto('${
+              produto.procod
+            }')">
               <i class="fa fa-trash"></i>
             </button>
           </td>
@@ -854,13 +645,15 @@ function carregarMarcas() {
         tr.innerHTML = `
           <td class="marca-des">${m.marcasdes}</td>
           <td>
-            <button class="btn btn-sm btn-primary" onclick="editarMarca(${m.marcascod
-          }, '${m.marcasdes.replace(
-            /'/g,
-            "\\'"
-          )}')"><i class='fa fa-edit'></i></button>
-            <button class="btn btn-sm btn-danger" onclick="excluirMarca(${m.marcascod
-          })"><i class='fa fa-trash'></i></button>
+            <button class="btn btn-sm btn-primary" onclick="editarMarca(${
+              m.marcascod
+            }, '${m.marcasdes.replace(
+              /'/g,
+              "\\'",
+            )}')"><i class='fa fa-edit'></i></button>
+            <button class="btn btn-sm btn-danger" onclick="excluirMarca(${
+              m.marcascod
+            })"><i class='fa fa-trash'></i></button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -869,7 +662,6 @@ function carregarMarcas() {
 }
 
 function editarMarca(id, nome) {
-  // Cria o popup
   let popup = document.createElement("div");
   popup.id = "popupEditarMarca";
   popup.style.position = "fixed";
@@ -884,75 +676,102 @@ function editarMarca(id, nome) {
   popup.style.zIndex = "9999";
 
   popup.innerHTML = `
-    <div style="background:#fff;padding:24px;border-radius:8px;min-width:300px;max-width:90vw;">
-      <h5>Editar Marca</h5>
+    <div style="background:#fff;padding:24px;border-radius:8px;min-width:300px;width:40vw;">
+      <h5>🏷️ Editar Marca</h5>
+      <hr style="width:100%; border:1px solid #ddd;">
+
       <form id="formEditarMarca">
+        
         <div class="mb-3">
-          <label for="editarMarcaDescricao" class="form-label">Descrição</label>
-          <input type="text" class="form-control" id="editarMarcaDescricao" name="marcasdes" value="${nome || ""
-    }" required>
+          <label class="form-label">📝 Descrição</label>
+          <input type="text" class="form-control" id="editarMarcaDescricao"
+                 name="marcasdes" value="${nome || ""}" required>
         </div>
+
+        <div class="mb-3">
+          <label class="form-label">📁 Logo da Marca (JPG/PNG)</label>
+          <div class="input-group" id="fileWrapper"></div>
+        </div>
+
         <div style="display:flex;gap:8px;justify-content:flex-end;">
           <button type="button" class="btn btn-secondary" id="cancelarEditarMarca">Cancelar</button>
           <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
+
       </form>
     </div>
   `;
 
   document.body.appendChild(popup);
 
-  document.getElementById("cancelarEditarMarca").onclick = function () {
-    document.body.removeChild(popup);
-  };
+  // cria input file via JS
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.name = "logo-marca";
+  fileInput.className = "form-control";
+  fileInput.accept = "image/jpeg,image/png";
+  popup.querySelector("#fileWrapper").appendChild(fileInput);
 
-  document.getElementById("formEditarMarca").onsubmit = function (e) {
+  document.getElementById("cancelarEditarMarca").onclick = () => popup.remove();
+
+  document.getElementById("formEditarMarca").onsubmit = async function (e) {
     e.preventDefault();
-    const marcasdes = document
+
+    const descricao = document
       .getElementById("editarMarcaDescricao")
       .value.trim();
-    fetch(`${BASE_URL}/marcas/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ marcasdes }),
-    })
-    .then((res) => {
-        if (res.status === 403) {
-          throw new Error("403");
-        }
-        return res;
-      })
-      .then((r) => r.json())
-      .then(() => {
-        // Mostra mensagem de sucesso como popup temporário
-        const msg = document.createElement("div");
-        msg.textContent = "Marca atualizada com sucesso!";
-        msg.style.position = "fixed";
-        msg.style.top = "20px";
-        msg.style.left = "50%";
-        msg.style.transform = "translateX(-50%)";
-        msg.style.background = "#28a745";
-        msg.style.color = "#fff";
-        msg.style.padding = "12px 24px";
-        msg.style.borderRadius = "6px";
-        msg.style.zIndex = "10000";
-        msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-        document.body.appendChild(msg);
-        setTimeout(() => {
-          msg.remove();
-        }, 2000);
-        document.body.removeChild(popup);
+    const arquivo = fileInput.files[0];
+
+    try {
+      // 1️⃣ Atualiza descrição
+      const updateRes = await fetch(`${BASE_URL}/marcas/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ marcasdes: descricao }),
+      });
+
+      if (!updateRes.ok) throw new Error("Erro no update da descrição");
+
+      // 2️⃣ Se o usuário enviou a logo → manda pro /save-marca
+      if (arquivo) {
+        const formData = new FormData();
+        formData.append("descricaoMarca", descricao); // nome esperado pelo backend
+        formData.append("logo-marca", arquivo);
+
+        const uploadRes = await fetch(`/save-marca`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadRes.ok) throw new Error("Erro no envio da logo");
+      }
+      const msg = document.createElement("div");
+      msg.textContent = "Marca atualizada com sucesso!";
+      msg.style.position = "fixed";
+      msg.style.top = "20px";
+      msg.style.left = "50%";
+      msg.style.transform = "translateX(-50%)";
+      msg.style.background = "#28a745";
+      msg.style.color = "#fff";
+      msg.style.padding = "12px 24px";
+      msg.style.borderRadius = "6px";
+      msg.style.zIndex = "10000";
+      document.body.appendChild(msg);
+
+      // fechar modal DEPOIS de mostrar mensagem
+      setTimeout(() => {
+        msg.remove();
+        popup.remove();
         carregarMarcas();
-      })
-      .catch((erro) => {
-        if (erro.message === "403") {
-          alertPersonalizado("Sem permissão para editar marcas. Contate o administrador.",2000);
-        } else {
-          alert("Erro ao atualizar a marca.");
-        }
-        console.error(erro);
-        document.body.removeChild(popup);
-      })
+      }, 1500);
+
+      popup.remove();
+      carregarMarcas();
+    } catch (err) {
+      alert("Erro ao atualizar a marca!");
+      console.error(err);
+      popup.remove();
+    }
   };
 }
 
@@ -1012,7 +831,9 @@ async function excluirMarca(id) {
 
   document.getElementById("confirmarExcluirMarca").onclick = async function () {
     try {
-      const res = await fetch(`${BASE_URL}/marcas/status/${id}`, { method: "PUT" });
+      const res = await fetch(`${BASE_URL}/marcas/status/${id}`, {
+        method: "PUT",
+      });
       if (res.status === 403) {
         throw new Error("403");
       }
@@ -1037,11 +858,15 @@ async function excluirMarca(id) {
       carregarMarcas();
     } catch (error) {
       if (error.message === "403") {
-        alertPersonalizado("Sem permissão para excluir marcas. Contate o administrador.",2000);
+        alertPersonalizado(
+          "Sem permissão para excluir marcas. Contate o administrador.",
+          2000,
+        );
       } else {
         alert("Erro ao excluir a marca.");
-      } console.error("Erro ao excluir marca:", error);
-    } 
+      }
+      console.error("Erro ao excluir marca:", error);
+    }
   };
 }
 
@@ -1071,11 +896,14 @@ function carregarModelos() {
         tr.innerHTML = `
           <td>${m.moddes}</td>
           <td>
-            <button class="btn btn-sm btn-primary" onclick="editarModelo(${m.modcod
-          }, '${m.moddes.replace(/'/g, "'")}', ${m.modmarcascod
-          })"><i class='fa fa-edit'></i></button>
-            <button class="btn btn-sm btn-danger" onclick="excluirModelo(${m.modcod
-          })"><i class='fa fa-trash'></i></button>
+            <button class="btn btn-sm btn-primary" onclick="editarModelo(${
+              m.modcod
+            }, '${m.moddes.replace(/'/g, "'")}', ${
+              m.modmarcascod
+            })"><i class='fa fa-edit'></i></button>
+            <button class="btn btn-sm btn-danger" onclick="excluirModelo(${
+              m.modcod
+            })"><i class='fa fa-trash'></i></button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -1100,15 +928,17 @@ function editarModelo(id, nome, marca) {
 
   popup.innerHTML = `
     <div style="background:#fff;padding:24px;border-radius:8px;min-width:300px;max-width:90vw;">
-      <h5>Editar Modelo</h5>
+      <h5>📱 Editar Modelo</h5>
+      <hr style="width: 100%; margin-left: 0; margin-right: 0; border: 1px solid #ddd;">
       <form id="formEditarModelo">
         <div class="mb-3">
-          <label for="editarModeloDescricao" class="form-label">Descrição</label>
-          <input type="text" class="form-control" id="editarModeloDescricao" name="moddes" value="${nome || ""
-    }" required>
+          <label for="editarModeloDescricao" class="form-label">📝 Descrição</label>
+          <input type="text" class="form-control" id="editarModeloDescricao" name="moddes" value="${
+            nome || ""
+          }" required>
         </div>
         <div class="mb-3">
-          <label for="editarModeloMarca" class="form-label">Marca</label>
+          <label for="editarModeloMarca" class="form-label">🏷️ Marca</label>
           <select class="form-control" id="editarModeloMarca" name="modmarcascod" required>
             <option value="">Carregando marcas...</option>
           </select>
@@ -1128,10 +958,11 @@ function editarModelo(id, nome, marca) {
     .then((r) => r.json())
     .then((marcas) => {
       const select = document.getElementById("editarModeloMarca");
-      select.innerHTML = '<option value="">Selecione uma marca</option>';
+      select.innerHTML = '<option value="">Selecione</option>';
       marcas.forEach((m) => {
-        select.innerHTML += `<option value="${m.marcascod}"${m.marcascod == marca ? " selected" : ""
-          }>${m.marcasdes}</option>`;
+        select.innerHTML += `<option value="${m.marcascod}"${
+          m.marcascod == marca ? " selected" : ""
+        }>${m.marcasdes}</option>`;
       });
     });
 
@@ -1150,7 +981,7 @@ function editarModelo(id, nome, marca) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ moddes, modmarcascod }),
     })
-     .then(async (res) => {
+      .then(async (res) => {
         if (res.status === 403) {
           throw new Error("403");
         }
@@ -1179,7 +1010,10 @@ function editarModelo(id, nome, marca) {
       })
       .catch((error) => {
         if (error.message === "403") {
-          alertPersonalizado("Sem permissão para editar modelos. Contate o administrador.",2000);
+          alertPersonalizado(
+            "Sem permissão para editar modelos. Contate o administrador.",
+            2000,
+          );
         } else {
           alert("Erro ao atualizar modelo");
         }
@@ -1223,7 +1057,9 @@ async function excluirModelo(id) {
   document.getElementById("confirmarExcluirModelo").onclick =
     async function () {
       try {
-        const res =  await fetch(`${BASE_URL}/modelo/${id}`, { method: "DELETE" });
+        const res = await fetch(`${BASE_URL}/modelo/${id}`, {
+          method: "DELETE",
+        });
         if (res.status === 403) {
           throw new Error("403");
         }
@@ -1251,9 +1087,15 @@ async function excluirModelo(id) {
         carregarModelos();
       } catch (e) {
         if (e.message === "403") {
-          alertPersonalizado("Sem permissão para excluir modelos. Contate o administrador.",2000);
+          alertPersonalizado(
+            "Sem permissão para excluir modelos. Contate o administrador.",
+            2000,
+          );
         } else if (e.message === "409") {
-          alertPersonalizado("Não é possível excluir este modelo pois existem produtos vinculados a ele.",3000);
+          alertPersonalizado(
+            "Não é possível excluir este modelo pois existem produtos vinculados a ele.",
+            3000,
+          );
         } else {
           alert("Erro ao excluir modelo");
         }
@@ -1288,13 +1130,15 @@ function carregarTipos() {
         tr.innerHTML = `
           <td>${t.tipodes}</td>
           <td>
-            <button class="btn btn-sm btn-primary" onclick="editarTipo(${t.tipocod
-          }, '${t.tipodes.replace(
-            /'/g,
-            "'"
-          )}')"><i class='fa fa-edit'></i></button>
-            <button class="btn btn-sm btn-danger" onclick="excluirTipo(${t.tipocod
-          })"><i class='fa fa-trash'></i></button>
+            <button class="btn btn-sm btn-primary" onclick="editarTipo(${
+              t.tipocod
+            }, '${t.tipodes.replace(
+              /'/g,
+              "'",
+            )}')"><i class='fa fa-edit'></i></button>
+            <button class="btn btn-sm btn-danger" onclick="excluirTipo(${
+              t.tipocod
+            })"><i class='fa fa-trash'></i></button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -1318,13 +1162,15 @@ function editarTipo(id, nome) {
   popup.style.zIndex = "9999";
 
   popup.innerHTML = `
-    <div style="background:#fff;padding:24px;border-radius:8px;min-width:300px;max-width:90vw;">
-      <h5>Editar Tipo</h5>
+    <div style="background:#fff;padding:24px;border-radius:8px;min-width:300px;width:40vw;">
+      <h5>📋 Editar Tipo</h5>
+      <hr style="width: 100%; margin-left: 0; margin-right: 0; border: 1px solid #ddd;">
       <form id="formEditarTipo">
         <div class="mb-3">
-          <label for="editarTipoDescricao" class="form-label">Descrição</label>
-          <input type="text" class="form-control" id="editarTipoDescricao" name="tipodes" value="${nome || ""
-    }" required>
+          <label for="editarTipoDescricao" class="form-label">📝 Descrição</label>
+          <input type="text" class="form-control" id="editarTipoDescricao" name="tipodes" value="${
+            nome || ""
+          }" required>
         </div>
         <div style="display:flex;gap:8px;justify-content:flex-end;">
           <button type="button" class="btn btn-secondary" id="cancelarEditarTipo">Cancelar</button>
@@ -1378,7 +1224,7 @@ function editarTipo(id, nome) {
       })
       .catch((error) => {
         if (error.message === "403") {
-          alertPersonalizado("Sem permissão para editar tipos.",2000);
+          alertPersonalizado("Sem permissão para editar tipos.", 2000);
         } else {
           alert("Erro ao atualizar tipo");
         }
@@ -1418,52 +1264,51 @@ async function excluirTipo(id) {
     document.body.removeChild(popup);
   };
 
-  document.getElementById("confirmarExcluirTipo").onclick = 
-    async function () {
-      try {
-        const res = await fetch(`${BASE_URL}/tipo/${id}`, { method: "DELETE" });  
-        if (res.status === 403) {
-          throw new Error("403");
-        }
-        if (res.status === 409) {
-          throw new Error("409");
-        }
-        // Mostra mensagem de sucesso como popup temporário
-        const msg = document.createElement("div");
-        msg.textContent = "Tipo excluído com sucesso!";
-        msg.style.position = "fixed";
-        msg.style.top = "20px";
-        msg.style.left = "50%";
-        msg.style.transform = "translateX(-50%)";
-        msg.style.background = "#dc3545";
-        msg.style.color = "#fff";
-        msg.style.padding = "12px 24px";
-        msg.style.borderRadius = "6px";
-        msg.style.zIndex = "10000";
-        msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-        document.body.appendChild(msg);
-        setTimeout(() => {
-          msg.remove();
-        }, 2000);
-        document.body.removeChild(popup);
-        carregarTipos();
-      } catch (error) {
-        if (error.message === "403") {
-          alertPersonalizado("Sem permissão para excluir este tipo. Contate o administrador.",2000);
-        }
-        else if (error.message === "409") {
-          alertPersonalizado("Não é possível excluir este tipo pois existem produtos vinculados a ele.",3000);
-        }
-
-        else {
-          alert("Erro ao excluir tipo");
-        }
-        document.body.removeChild(popup);
+  document.getElementById("confirmarExcluirTipo").onclick = async function () {
+    try {
+      const res = await fetch(`${BASE_URL}/tipo/${id}`, { method: "DELETE" });
+      if (res.status === 403) {
+        throw new Error("403");
       }
-    
-  
+      if (res.status === 409) {
+        throw new Error("409");
+      }
+      // Mostra mensagem de sucesso como popup temporário
+      const msg = document.createElement("div");
+      msg.textContent = "Tipo excluído com sucesso!";
+      msg.style.position = "fixed";
+      msg.style.top = "20px";
+      msg.style.left = "50%";
+      msg.style.transform = "translateX(-50%)";
+      msg.style.background = "#dc3545";
+      msg.style.color = "#fff";
+      msg.style.padding = "12px 24px";
+      msg.style.borderRadius = "6px";
+      msg.style.zIndex = "10000";
+      msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+      document.body.appendChild(msg);
+      setTimeout(() => {
+        msg.remove();
+      }, 2000);
+      document.body.removeChild(popup);
+      carregarTipos();
+    } catch (error) {
+      if (error.message === "403") {
+        alertPersonalizado(
+          "Sem permissão para excluir este tipo. Contate o administrador.",
+          2000,
+        );
+      } else if (error.message === "409") {
+        alertPersonalizado(
+          "Não é possível excluir este tipo pois existem produtos vinculados a ele.",
+          3000,
+        );
+      } else {
+        alert("Erro ao excluir tipo");
+      }
+      document.body.removeChild(popup);
+    }
   };
-
 }
 
 // ------- GESTÃO CORES ---------
@@ -1495,8 +1340,9 @@ function carregarCores() {
             data-cod="${c.corcod}" 
             data-nome="${c.cornome.replace(/"/g, "&quot;")}" 
             onclick="editarCor(this.dataset.cod, this.dataset.nome)"><i class='fa fa-edit'></i></button>
-            <button class="btn btn-sm btn-danger" onclick="excluirCor(${c.corcod
-          })"><i class='fa fa-trash'></i></button>
+            <button class="btn btn-sm btn-danger" onclick="excluirCor(${
+              c.corcod
+            })"><i class='fa fa-trash'></i></button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -1520,13 +1366,14 @@ function editarCor(id, nome) {
 
   popup.innerHTML = `
     <div style="background:#fff;padding:24px;border-radius:8px;min-width:300px;max-width:90vw;">
-      <h5>Editar Cor</h5>
+      <h5>🎨 Editar Cor</h5>
+      <hr style="width: 100%; margin-left: 0; margin-right: 0; border: 1px solid #ddd;">
       <form id="formEditarCor">
         <div class="mb-3">
-          <label for="editarCorDescricao" class="form-label">Descrição</label>
+          <label for="editarCorDescricao" class="form-label">📝 Descrição</label>
           <input type="text" class="form-control" id="editarCorDescricao" name="cornome" value="${(
-      nome || ""
-    ).replace(/"/g, "&quot;")}"
+            nome || ""
+          ).replace(/"/g, "&quot;")}"
           }" required>
         </div>
         <div style="display:flex;gap:8px;justify-content:flex-end;">
@@ -1578,11 +1425,13 @@ function editarCor(id, nome) {
       })
       .catch((error) => {
         if (error.message === "403") {
-          alertPersonalizado("Sem permissão para editar esta cor. Contate o administrador.",2000);
+          alertPersonalizado(
+            "Sem permissão para editar esta cor. Contate o administrador.",
+            2000,
+          );
         } else if (error.message === "200") {
           alert("OK");
-        }
-        else {
+        } else {
           alert("Erro ao atualizar cor");
         }
         document.body.removeChild(popup);
@@ -1646,10 +1495,14 @@ async function excluirCor(id) {
       carregarCores();
     } catch (error) {
       if (error.message === "403") {
-        alertPersonalizado("Sem permissão para excluir esta cor. Contate o administrador.",2000);
+        alertPersonalizado(
+          "Sem permissão para excluir esta cor. Contate o administrador.",
+          2000,
+        );
       } else {
         alert("Erro ao excluir cor");
-      } document.body.removeChild(popup);
+      }
+      document.body.removeChild(popup);
     }
   };
 }
@@ -1680,16 +1533,24 @@ function carregarPecas() {
         tr.innerHTML = `
           <td>${t.prodes}</td>
           <td>${formatarMoeda(t.provl)}</td>
+          <td>${formatarMoeda(t.procusto)}</td>
           <td>
             <div style="display: flex; gap: 6px;">
-              <button class="btn btn-sm btn-primary btn-editar-peca" data-id="${t.procod
-          }" data-nome="${t.prodes.replace(/"/g, "&quot;")}" data-valor="${t.provl
-          }">
-                <i class='fa fa-edit'></i>
+              <button
+                class="btn btn-sm btn-primary btn-editar-peca"
+                data-id="${t.procod}"
+                data-nome="${t.prodes.replace(/"/g, "&quot;")}"
+                data-valor="${t.provl}"
+                data-custo="${t.procusto}"
+              >
+                <i class="fa fa-edit"></i>
               </button>
-              <button class="btn btn-sm btn-danger btn-excluir-peca" data-id="${t.procod
-          }">
-                <i class='fa fa-trash'></i>
+
+              <button
+                class="btn btn-sm btn-danger btn-excluir-peca"
+                data-id="${t.procod}"
+              >
+                <i class="fa fa-trash"></i>
               </button>
             </div>
           </td>`;
@@ -1746,40 +1607,39 @@ async function excluirPro(id) {
 
   document.getElementById("confirmarExcluirPeca").onclick = async function () {
     try {
-      const res =  await fetch(`${BASE_URL}/pro/${id}`, { method: "DELETE" });
-       
+      const res = await fetch(`${BASE_URL}/pro/${id}`, { method: "DELETE" });
+
       if (res.status === 200) {
-        
-      // Mostra mensagem de sucesso como popup temporário
-      const msg = document.createElement("div");
-      msg.textContent = "Peça excluída com sucesso!";
-      msg.style.position = "fixed";
-      msg.style.top = "20px";
-      msg.style.left = "50%";
-      msg.style.transform = "translateX(-50%)";
-      msg.style.background = "#dc3545";
-      msg.style.color = "#fff";
-      msg.style.padding = "12px 24px";
-      msg.style.borderRadius = "6px";
-      msg.style.zIndex = "10000";
-      msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-      document.body.appendChild(msg);
-      setTimeout(() => {
-        msg.remove();
-      }, 2000);
-      document.body.removeChild(popup);
-      carregarPecas();
-    } else if (res.status === 403) {
-      document.body.removeChild(popup);
+        // Mostra mensagem de sucesso como popup temporário
+        const msg = document.createElement("div");
+        msg.textContent = "Peça excluída com sucesso!";
+        msg.style.position = "fixed";
+        msg.style.top = "20px";
+        msg.style.left = "50%";
+        msg.style.transform = "translateX(-50%)";
+        msg.style.background = "#dc3545";
+        msg.style.color = "#fff";
+        msg.style.padding = "12px 24px";
+        msg.style.borderRadius = "6px";
+        msg.style.zIndex = "10000";
+        msg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+        document.body.appendChild(msg);
+        setTimeout(() => {
+          msg.remove();
+        }, 2000);
+        document.body.removeChild(popup);
+        carregarPecas();
+      } else if (res.status === 403) {
+        document.body.removeChild(popup);
         throw new Error("403");
       }
     } catch (erro) {
       if (erro.message === "403") {
-          alertPersonalizado("Sem permissão para excluir produtos.",2000);
-        } else {
-          alert("Erro ao criar produto.");
-        }
-        console.error(erro);
+        alertPersonalizado("Sem permissão para excluir produtos.", 2000);
+      } else {
+        alert("Erro ao criar produto.");
+      }
+      console.error(erro);
     }
   };
 }
@@ -1964,12 +1824,12 @@ function toggleOrdemMarca() {
         holder.innerHTML = `
             <ul id="sortable" class="list-group">
               ${marcas
-            .map(
-              (m) =>
-                `<li class="list-group-item" data-id="${m.marcascod}"><span class="handle">☰ </span>${m.marcasdes}
-                    </li>`
-            )
-            .join("")}
+                .map(
+                  (m) =>
+                    `<li class="list-group-item" data-id="${m.marcascod}"><span class="handle">☰ </span>${m.marcasdes}
+                    </li>`,
+                )
+                .join("")}
             </ul>
             <button id="salvarOrdem" class="btn btn-success btn-block mt-3">Salvar Ordem</button>
           `;
@@ -2055,19 +1915,19 @@ function toggleOrdemModelo() {
         .then((r) => r.json())
         .then((modelos) => {
           const modelosFiltrados = modelos.filter(
-            (m) => m.modmarcascod == marcaId
+            (m) => m.modmarcascod == marcaId,
           );
 
           const holder = popup.querySelector("#listaOrdemHolder");
           holder.innerHTML = `
             <ul id="sortable" class="list-group">
               ${modelosFiltrados
-              .map(
-                (m) =>
-                  `<li class="list-group-item" data-id="${m.modcod}"><span class="handle">☰ </span>${m.moddes}
-                    </li>`
-              )
-              .join("")}
+                .map(
+                  (m) =>
+                    `<li class="list-group-item" data-id="${m.modcod}"><span class="handle">☰ </span>${m.moddes}
+                    </li>`,
+                )
+                .join("")}
             </ul>
             <button id="salvarOrdem" class="btn btn-success btn-block mt-3">Salvar Ordem</button>
           `;
@@ -2246,13 +2106,13 @@ function toggleOrdemPeca() {
         holder.innerHTML = `
             <ul id="sortable" class="list-group">
             ${produtos
-            .map(
-              (p) =>
-                `<li class="list-group-item" data-id="${p.procod}">
+              .map(
+                (p) =>
+                  `<li class="list-group-item" data-id="${p.procod}">
                      <span class="handle">☰ </span>${p.prodes}
-                   </li>`
-            )
-            .join("")}
+                   </li>`,
+              )
+              .join("")}
             </ul>
             <button id="salvarOrdem" class="btn btn-success btn-block mt-3">Salvar Ordem</button>
           `;
@@ -2377,7 +2237,7 @@ function toggleOrdemTipoPeca() {
                 (p) =>
                   `<li class="list-group-item" data-id="${p.tipocod}">
                      <span class="handle">☰ </span>${p.tipodes}
-                   </li>`
+                   </li>`,
               )
               .join("")}
             </ul>
@@ -2486,11 +2346,12 @@ async function processCharges() {
 }
 processCharges();
 // checa 1x por dia
-setInterval(() => {
-  processCharges();
-}, 24 * 60 * 60 * 1000);
-
-
+setInterval(
+  () => {
+    processCharges();
+  },
+  24 * 60 * 60 * 1000,
+);
 
 // alertPersonalizado personalizado Tom FORMAL
 

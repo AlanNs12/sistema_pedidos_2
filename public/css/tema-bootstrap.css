@@ -1,0 +1,125 @@
+/* PRIMARY – Roxo */
+.btn-primary,
+.bg-primary,
+.alert-primary {
+  --bs-primary: linear-gradient(135deg, #6ea8fe, #3b82f6);
+  --bs-btn-bg: linear-gradient(135deg, #6ea8fe, #3b82f6);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-bg: linear-gradient(135deg, #3081fb, #106cff);
+  --bs-btn-color: #fff;
+}
+
+/* INFO – Azul */
+.btn-info,
+.bg-info,
+.alert-info {
+  --bs-info: linear-gradient(90deg, #6a00ff, #9333ea);
+  --bs-btn-bg: linear-gradient(90deg, #6a00ff, #9333ea);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-bg: linear-gradient(90deg, #5a00d6, #7f2ccf);
+  --bs-btn-color: #fff;
+}
+
+/* WARNING – Laranja */
+.btn-warning,
+.bg-warning,
+.alert-warning {
+  --bs-warning: linear-gradient(90deg, #ff8a00, #ff5e00);
+  --bs-btn-bg: linear-gradient(90deg, #ff8a00, #ff5e00);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-bg: linear-gradient(90deg, #f57a00, #e05200);
+  --bs-btn-color: #fff;
+}
+
+/* SUCCESS – Verde */
+.btn-success,
+.bg-success,
+.alert-success {
+  --bs-success: linear-gradient(90deg, #00c851, #009432);
+  --bs-btn-bg: linear-gradient(90deg, #00c851, #009432);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-bg: linear-gradient(90deg, #00b248, #007a2b);
+  --bs-btn-color: #fff;
+}
+
+/* DANGER – Vermelho + branco leve */
+.btn-danger,
+.bg-danger,
+.alert-danger {
+  --bs-danger: linear-gradient(90deg, #ff4d4d, #ffffff);
+  --bs-btn-bg: linear-gradient(90deg, #ff4d4d, #ffffff);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-bg: linear-gradient(90deg, #e63e3e, #f2f2f2);
+  --bs-btn-color: #fff;
+}
+
+/* PRIMARY - Roxo */
+.btn-primary {
+  background-image: linear-gradient(135deg, #6ea8fe, #3b82f6);
+  background-color: transparent; /* fallback */
+  color: #ffffff;
+  border: 0;
+  box-shadow: none;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-image: linear-gradient(135deg, #3081fb, #106cff);
+  color: #fff;
+}
+
+/* INFO - Azul */
+.btn-info {
+  background-image: linear-gradient(90deg, #6a00ff, #9333ea);
+  background-color: transparent;
+  color: #fff;
+  border: 0;
+}
+.btn-info:hover {
+  background-image: linear-gradient(90deg, #5a00d6, #7f2ccf);
+  color: #fff;
+}
+
+/* WARNING - Laranja */
+.btn-warning {
+  background-image: linear-gradient(90deg, #ff8a00, #ff5e00);
+  background-color: transparent;
+  color: #fff;
+  border: 0;
+}
+.btn-warning:hover {
+  background-image: linear-gradient(90deg, #f57a00, #e05200);
+  color: #fff ;
+}
+
+/* SUCCESS - Verde */
+.btn-success {
+  background-image: linear-gradient(90deg, #00c851, #009432);
+  background-color: transparent;
+  color: #fff;
+  border: 0;
+}
+.btn-success:hover {
+  background-image: linear-gradient(90deg, #00b248, #007a2b);
+}
+
+/* DANGER - Vermelho + branco leve */
+.btn-danger {
+  background-image: linear-gradient(90deg, #ff4d4d, #e35151);
+  background-color: transparent;
+  color: #fff;
+  border: 0;
+}
+.btn-danger:hover {
+  background-image: linear-gradient(90deg, #e63e3e, #be3939);
+  color: #fff;
+}
+
+/* Garantir que badges, bg-* e alerts também usem ou aceitem o gradiente visual */
+.bg-primary,
+.alert-primary,
+.badge.bg-primary {
+  background-image: linear-gradient(135deg, #3081fb, #106cff) !important;
+  color: #fff !important;
+  border: 0 !important;
+}

@@ -9,18 +9,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("email").value = user.usuemail || "";
       document.getElementById("formPerfil").dataset.userId = user.usucod;
     }
-
-    const [marcas, modelos, tipos, pecas] = await Promise.all([
-      fetch(`${BASE_URL}/marcas`).then((r) => r.json()),
-      fetch(`${BASE_URL}/modelos`).then((r) => r.json()),
-      fetch(`${BASE_URL}/tipos`).then((r) => r.json()),
-      fetch(`${BASE_URL}/pros`).then((r) => r.json()),
-    ]);
-
-    document.getElementById("perfilTotalMarcas").textContent = marcas.length;
-    document.getElementById("perfilTotalModelos").textContent = modelos.length;
-    document.getElementById("perfilTotalTipos").textContent = tipos.length;
-    document.getElementById("perfilTotalPecas").textContent = pecas.length;
   } catch (err) {
     console.error("Erro ao carregar dados do usuário", err);
   }

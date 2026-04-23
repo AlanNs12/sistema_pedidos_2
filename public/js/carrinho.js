@@ -18,19 +18,72 @@ function limparCarrinho() {
   atualizarIconeCarrinho(); // Atualiza o ícone do carrinho, se necessário
 }
 
+async function carregarUsuarioLogado() {
+  const response = await fetch(`${BASE_URL}/me/usuario`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (response.ok) {
+    const data = await response.json();
+    return data.usunome;
+  } else {
+    return null;
+  }
+}
+
 //função para verificar se esta logado e mostrar o botão orçamento
 document.addEventListener("DOMContentLoaded", function () {
-  const usuarioLogado = localStorage.getItem("usuarioLogado");
-  const botaoOrcamento = document.getElementById("botao-orcamento");
+  fetch(`${BASE_URL}/emp`)
+    .then((response) => response.json())
+    .then(async (data) => {
+      const empusapv = data.empusapv;
 
-  console.log(usuarioLogado);
+      const botaoOrcamento = document.getElementById("botao-orcamento");
 
-  if (usuarioLogado) {
-    botaoOrcamento.style.display = "inline";
-  } else {
-    botaoOrcamento.style.display = "none";
-  }
+      const usuarioLogado = await carregarUsuarioLogado();
+
+      if (usuarioLogado && empusapv === "S") {
+        botaoOrcamento.style.display = "inline";
+      } else if (usuarioLogado && empusapv === "N") {
+        botaoOrcamento.style.display = "inline";
+      } else {
+        botaoOrcamento.style.display = "none";
+      }
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar configurações da empresa:", error);
+    });
+
+  // Remove usuarioLogado do localStorage ao fechar a página
+  window.addEventListener("beforeunload", function () {
+    localStorage.removeItem("usuarioLogado");
+  });
 });
+
+async function buscarUsuario() {
+  try {
+    const response = await fetch(`${BASE_URL}/usuario/viuversao`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data.usucod;
+    } else {
+      console.error("Erro ao buscar usuário:", response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+    return null;
+  }
+}
 
 function renderCart() {
   const corpoTabela = document.getElementById("carrinhoCorpo");
@@ -63,6 +116,7 @@ function renderCart() {
     const tipo = item.tipo || " ";
     const marca = item.marca || " ";
     const cor = item.corSelecionada || " ";
+    const corid = item.idCorSelecionada || " ";
     const qtde = item.qt || 0;
     const valor = parseFloat(item.preco) || 0;
     const itemTotal = valor * qtde;
@@ -206,6 +260,15 @@ let quantidadeEmoji = "\u{1F522}"; // 🔢
 
 // função para retirar balcão pegar o id do produto e a quantidade e valor total gerar um formulario e abrir conversa no whatsapp
 async function enviarWhatsApp() {
+  const disabledDiv = document.getElementById("divFinalizar");
+  try {
+    disabledDiv.style.pointerEvents = "none";
+    disabledDiv.style.opacity = "0.6";
+    disabledDiv.status.userSelect = "none";
+  } catch (error) {
+    console.error("Failed", error);
+  }
+
   const respSeq = await fetch("/pedidos/sequencia");
   const seqData = await respSeq.json();
   const pvcod = seqData.nextval;
@@ -214,13 +277,14 @@ async function enviarWhatsApp() {
   const observacoes = document.getElementById("observacoes").value.trim();
 
   if (cart.length === 0) {
-    alert("Seu carrinho está vazio!");
+    showToast("Seu carrinho está vazio!", "warning");
+    reabilitarBotoes();
     return;
   }
 
   let mensagem = `${caixaEmoji} Pedido de Peças:\n\n`;
   let totalValue = 0;
-
+  // detalhamento dos itens do pedido
   cart.forEach((item) => {
     const nome = item.nome || "---";
     const qtde = item.qt || 0;
@@ -228,96 +292,143 @@ async function enviarWhatsApp() {
     const marca = item.marca || "";
     const tipo = item.tipo || "";
     totalValue += valor * qtde;
+    const cor = item.idCorSelecionada || "";
 
     mensagem += `(${qtde}) ${nome} R$${valor.toFixed(2)}\n\n`;
   });
-
-  const respPedido = await fetch(`${BASE_URL}/pedidos/enviar`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      pvcod,
-      cart,
-      total: totalValue,
-      obs: observacoes,
-      canal: "BALCAO",
-      status: "A",
-      confirmado: "N",
-    }),
-  });
-  const data = await respPedido.json();
-  console.log("Pedido salvo com sucesso:", data);
-
-  if (observacoes) {
-    mensagem += `${observacaoEmoji} Observações: ${observacoes}\n`;
-  }
-  mensagem += `${sacoDinheiroEmoji} Total: R$ ${totalValue.toFixed(2)}\n`;
-  mensagem += `${lojaEmoji} Retirada: No balcão\n`;
-  mensagem += `Pedido N°: ${pvcod}\n`;
-  // mensagem += `${celularEmoji} Por favor, confirme o pedido. ${confirmeEmoji}`;
-
-  fetch(`${BASE_URL}/emp`)
-    .then((response) => response.json())
-    .then((data) => {
-      // Use o número
-      const whatsappNumber1 = data.empwhatsapp1 || ""; // Use a default number if not found
-      const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber1}&text=${encodeURIComponent(
-        mensagem
-      )}`;
-      window.location.href = whatsappUrl;
-
-      // testes;
-
-      /// Limpa o carrinho no localStorage e na tela
-      localStorage.setItem("cart", JSON.stringify([]));
-      renderCart(); // Isso vai limpar a tabela e zerar o total
-
-      // Remove o parâmetro cart da URL
-      const url = new URL(window.location);
-      url.searchParams.delete("cart");
-      window.history.replaceState(
-        {},
-        document.title,
-        url.pathname + url.search
-      );
-
-      // Redireciona para o index após um pequeno delay
-      setTimeout(() => {
-        window.location.href = "index";
-      }, 500);
-      // atualizarIconeCarrinho(); // renderCart já deve ter chamado isso ou atualizado o necessário
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar número do WhatsApp:", error);
-      const whatsappNumber1 = data.empwhatsapp1 || ""; // Fallback caso a API falhe
-      const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber1}&text=${encodeURIComponent(
-        mensagem
-      )}`;
-      window.location.href = whatsappUrl;
-
-      /// Limpa o carrinho no localStorage e na tela
-      localStorage.setItem("cart", JSON.stringify([]));
-      renderCart(); // Isso vai limpar a tabela e zerar o total
-
-      // Remove o parâmetro cart da URL
-      const url = new URL(window.location);
-      url.searchParams.delete("cart");
-      window.history.replaceState(
-        {},
-        document.title,
-        url.pathname + url.search
-      );
-
-      // Redireciona para o index após um pequeno delay
-      setTimeout(() => {
-        window.location.href = "index";
-      }, 500);
-      // atualizarIconeCarrinho(); // renderCart já deve ter chamado isso ou atualizado o necessário
+  // fim detalhamento
+  // Enviar pedido para o servidor
+  try {
+    const respPedido = await fetch(`${BASE_URL}/pedidos/enviar`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pvcod,
+        cart,
+        total: totalValue,
+        obs: observacoes,
+        canal: "BALCAO",
+        status: "A",
+        confirmado: "N",
+        codigoVendedor: (await buscarUsuario()) || null,
+      }),
     });
+    const data = await respPedido.json();
+
+    // Verifica se houve erro (ex: estoque insuficiente)
+    if (!respPedido.ok) {
+      console.error("Erro ao criar pedido:", data);
+      const mensagemErro =
+        data.error || "Erro ao processar pedido. Tente novamente.";
+      showToast(mensagemErro, "error");
+      reabilitarBotoes();
+      return;
+    }
+
+    console.log("Pedido salvo com sucesso:", data);
+
+    if (observacoes) {
+      mensagem += `${observacaoEmoji} Observações: ${observacoes}\n`;
+    }
+    mensagem += `${sacoDinheiroEmoji} Total: R$ ${totalValue.toFixed(2)}\n`;
+    mensagem += `${lojaEmoji} Retirada: No balcão\n`;
+    mensagem += `Pedido N°: ${pvcod}\n`;
+    // mensagem += `${celularEmoji} Por favor, confirme o pedido. ${confirmeEmoji}`;
+
+    fetch(`${BASE_URL}/emp`)
+      .then((response) => response.json())
+      .then((data) => {
+        // Use o número
+        const whatsappNumber1 = data.empwhatsapp1 || ""; // Use a default number if not found
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber1}&text=${encodeURIComponent(
+          mensagem
+        )}`;
+        window.location.href = whatsappUrl;
+
+        // testes;
+
+        /// Limpa o carrinho no localStorage e na tela
+        localStorage.setItem("cart", JSON.stringify([]));
+        renderCart(); // Isso vai limpar a tabela e zerar o total
+
+        // Remove o parâmetro cart da URL
+        const url = new URL(window.location);
+        url.searchParams.delete("cart");
+        window.history.replaceState(
+          {},
+          document.title,
+          url.pathname + url.search
+        );
+
+        // Redireciona para o index após um pequeno delay
+        setTimeout(() => {
+          window.location.href = "index";
+        }, 500);
+        // atualizarIconeCarrinho(); // renderCart já deve ter chamado isso ou atualizado o necessário
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar número do WhatsApp:", error);
+        // Notifica o usuário que houve um problema ao buscar o número
+        showToast(
+          "Pedido criado com sucesso! Não foi possível obter o número do WhatsApp. Você será redirecionado para selecionar um contato.",
+          "warning",
+          5000
+        );
+        const whatsappNumber1 = ""; // Fallback caso a API falhe
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber1}&text=${encodeURIComponent(
+          mensagem
+        )}`;
+        window.location.href = whatsappUrl;
+
+        /// Limpa o carrinho no localStorage e na tela
+        localStorage.setItem("cart", JSON.stringify([]));
+        renderCart(); // Isso vai limpar a tabela e zerar o total
+
+        // Remove o parâmetro cart da URL
+        const url = new URL(window.location);
+        url.searchParams.delete("cart");
+        window.history.replaceState(
+          {},
+          document.title,
+          url.pathname + url.search
+        );
+
+        // Redireciona para o index após um pequeno delay
+        setTimeout(() => {
+          window.location.href = "index";
+        }, 500);
+        // atualizarIconeCarrinho(); // renderCart já deve ter chamado isso ou atualizado o necessário
+      });
+  } catch (error) {
+    console.error("Erro ao processar pedido:", error);
+    showToast("Erro ao processar pedido. Tente novamente.", "error");
+    reabilitarBotoes();
+  }
+}
+
+// Função auxiliar para reabilitar os botões após erro
+function reabilitarBotoes() {
+  const disabledDiv = document.getElementById("divFinalizar");
+  try {
+    disabledDiv.style.pointerEvents = "auto";
+    disabledDiv.style.opacity = "1";
+    disabledDiv.style.userSelect = "auto";
+  } catch (error) {
+    console.error("Erro ao reabilitar botões:", error);
+  }
 }
 
 // quando clicar lá no botão de entrega, abrir um popup com nome completo e endereço
 async function enviarWhatsAppEntrega() {
+  const disabledDiv = document.getElementById("divFinalizar");
+  try {
+    disabledDiv.style.pointerEvents = "none";
+    disabledDiv.style.opacity = "0.6";
+    disabledDiv.status.userSelect = "none";
+  } catch (error) {
+    console.error("Failed", error);
+  }
+
   const respSeq = await fetch("/pedidos/sequencia");
   const seqData = await respSeq.json();
   const pvcod = seqData.nextval;
@@ -325,7 +436,8 @@ async function enviarWhatsAppEntrega() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
   const observacoes = document.getElementById("observacoes").value.trim();
   if (cart.length === 0) {
-    alert("Seu carrinho está vazio!");
+    showToast("Seu carrinho está vazio!", "warning");
+    reabilitarBotoes();
     return;
   }
 
@@ -338,92 +450,117 @@ async function enviarWhatsAppEntrega() {
     const valor = parseFloat(item.preco) || 0;
     const marca = item.marca || "";
     const tipo = item.tipo || "";
+    const cor = item.corid || "";
     totalValue += valor * qtde;
 
     mensagem += `(${qtde}) ${nome} R$${valor.toFixed(2)}\n\n`;
   });
 
-  const respPedido = await fetch(`${BASE_URL}/pedidos/enviar`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      pvcod,
-      cart,
-      total: totalValue,
-      obs: observacoes,
-      canal: "ENTREGA",
-      status: "A",
-      confirmado: "N",
-    }),
-  });
-  const data = await respPedido.json();
-  console.log("Pedido salvo com sucesso:", data);
-
-  if (observacoes) {
-    mensagem += `${observacaoEmoji} Observações: ${observacoes}\n`;
-  }
-
-  mensagem += `${sacoDinheiroEmoji} Total: R$ ${totalValue.toFixed(2)}\n`;
-  mensagem += `${caminhaoEmoji} Entrega\n`;
-  mensagem += `Pedido N°: ${pvcod}\n`;
-
-  fetch(`${BASE_URL}/emp`)
-    .then((response) => response.json())
-    .then((data) => {
-      // Use o número
-      const whatsappNumber2 = data.empwhatsapp2 || ""; // Use a default number if not found
-      const whatsappUrl2 = `https://api.whatsapp.com/send?phone=${whatsappNumber2}&text=${encodeURIComponent(
-        mensagem
-      )}`;
-
-      window.location.href = whatsappUrl2;
-
-      /// Limpa o carrinho no localStorage e na tela
-      localStorage.setItem("cart", JSON.stringify([]));
-      renderCart(); // Isso vai limpar a tabela e zerar o total
-
-      // Remove o parâmetro cart da URL
-      const url = new URL(window.location);
-      url.searchParams.delete("cart");
-      window.history.replaceState(
-        {},
-        document.title,
-        url.pathname + url.search
-      );
-
-      // Redireciona para o index após um pequeno delay
-      setTimeout(() => {
-        window.location.href = "index";
-      }, 500);
-      // atualizarIconeCarrinho(); // renderCart já deve ter chamado isso ou atualizado o necessário
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar número do WhatsApp:", error);
-      const whatsappNumber2 = ""; // Fallback caso a API falhe
-      const whatsappUrl2 = `https://api.whatsapp.com/send?phone=${whatsappNumber2}&text=${encodeURIComponent(
-        mensagem
-      )}`;
-      window.location.href = whatsappUrl2;
-
-      /// Limpa o carrinho no localStorage e na tela
-      localStorage.setItem("cart", JSON.stringify([]));
-      renderCart(); // Isso vai limpar a tabela e zerar o total
-
-      // Remove o parâmetro cart da URL
-      const url = new URL(window.location);
-      url.searchParams.delete("cart");
-      window.history.replaceState(
-        {},
-        document.title,
-        url.pathname + url.search
-      );
-
-      // Redireciona para o index após um pequeno delay
-      setTimeout(() => {
-        window.location.href = "index";
-      }, 500);
-      // atualizarIconeCarrinho(); // renderCart já deve ter chamado isso ou atualizado o necessário
+  try {
+    const respPedido = await fetch(`${BASE_URL}/pedidos/enviar`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pvcod,
+        cart,
+        total: totalValue,
+        obs: observacoes,
+        canal: "ENTREGA",
+        status: "A",
+        confirmado: "N",
+        codigoVendedor: (await buscarUsuario()) || null,
+      }),
     });
+    const data = await respPedido.json();
+
+    // Verifica se houve erro (ex: estoque insuficiente)
+    if (!respPedido.ok) {
+      console.error("Erro ao criar pedido:", data);
+      const mensagemErro =
+        data.error || "Erro ao processar pedido. Tente novamente.";
+      showToast(mensagemErro, "error");
+      reabilitarBotoes();
+      return;
+    }
+
+    console.log("Pedido salvo com sucesso:", data);
+
+    if (observacoes) {
+      mensagem += `${observacaoEmoji} Observações: ${observacoes}\n`;
+    }
+
+    mensagem += `${sacoDinheiroEmoji} Total: R$ ${totalValue.toFixed(2)}\n`;
+    mensagem += `${caminhaoEmoji} Entrega\n`;
+    mensagem += `Pedido N°: ${pvcod}\n`;
+
+    fetch(`${BASE_URL}/emp`)
+      .then((response) => response.json())
+      .then((data) => {
+        // Use o número
+        const whatsappNumber2 = data.empwhatsapp2 || ""; // Use a default number if not found
+        const whatsappUrl2 = `https://api.whatsapp.com/send?phone=${whatsappNumber2}&text=${encodeURIComponent(
+          mensagem
+        )}`;
+
+        window.location.href = whatsappUrl2;
+
+        /// Limpa o carrinho no localStorage e na tela
+        localStorage.setItem("cart", JSON.stringify([]));
+        renderCart(); // Isso vai limpar a tabela e zerar o total
+
+        // Remove o parâmetro cart da URL
+        const url = new URL(window.location);
+        url.searchParams.delete("cart");
+        window.history.replaceState(
+          {},
+          document.title,
+          url.pathname + url.search
+        );
+
+        // Redireciona para o index após um pequeno delay
+        setTimeout(() => {
+          window.location.href = "index";
+        }, 500);
+        // atualizarIconeCarrinho(); // renderCart já deve ter chamado isso ou atualizado o necessário
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar número do WhatsApp:", error);
+        // Notifica o usuário que houve um problema ao buscar o número
+        showToast(
+          "Pedido criado com sucesso! Não foi possível obter o número do WhatsApp. Você será redirecionado para selecionar um contato.",
+          "warning",
+          5000
+        );
+        const whatsappNumber2 = ""; // Fallback caso a API falhe
+        const whatsappUrl2 = `https://api.whatsapp.com/send?phone=${whatsappNumber2}&text=${encodeURIComponent(
+          mensagem
+        )}`;
+        window.location.href = whatsappUrl2;
+
+        /// Limpa o carrinho no localStorage e na tela
+        localStorage.setItem("cart", JSON.stringify([]));
+        renderCart(); // Isso vai limpar a tabela e zerar o total
+
+        // Remove o parâmetro cart da URL
+        const url = new URL(window.location);
+        url.searchParams.delete("cart");
+        window.history.replaceState(
+          {},
+          document.title,
+          url.pathname + url.search
+        );
+
+        // Redireciona para o index após um pequeno delay
+        setTimeout(() => {
+          window.location.href = "index";
+        }, 500);
+        // atualizarIconeCarrinho(); // renderCart já deve ter chamado isso ou atualizado o necessário
+      });
+  } catch (error) {
+    console.error("Erro ao processar pedido:", error);
+    showToast("Erro ao processar pedido. Tente novamente.", "error");
+    reabilitarBotoes();
+  }
 }
 
 // função botão orçamento será enviado apenas a lista de itens sem valor
@@ -434,7 +571,7 @@ function copiarOrcamentoParaClipboard() {
   const observacaoEmoji = "📝";
 
   if (cart.length === 0) {
-    alert("Seu carrinho está vazio!");
+    showToast("Seu carrinho está vazio!", "warning");
     return;
   }
 
@@ -459,7 +596,7 @@ function copiarOrcamentoParaClipboard() {
       .writeText(mensagem)
       .then(() => {})
       .catch((err) => {
-        alert("Erro ao copiar: " + err);
+        showToast("Erro ao copiar: " + err, "error");
       });
   } else {
     // Fallback usando textarea e execCommand
@@ -470,7 +607,7 @@ function copiarOrcamentoParaClipboard() {
     try {
       document.execCommand("copy");
     } catch (err) {
-      alert("Falha ao copiar o texto. Copie manualmente:\n\n" + mensagem);
+      showToast("Falha ao copiar o texto. Copie manualmente.", "error");
     }
     document.body.removeChild(textarea);
   }

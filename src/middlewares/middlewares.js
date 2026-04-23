@@ -1,31 +1,32 @@
 const jwt = require('jsonwebtoken');
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 function autenticarToken(req, res, next) {
     const token = req.cookies.token;
 
     if (!token) {
-        return res.status(401).redirect('/login'); 
+        return res.status(401).redirect('/login');
     }
 
     try {
-        const decoded = jwt.verify(token, 'chave-secreta');
-     // gera de novo um novo token com 10 minutos
-        const novoToken = jwt.sign({ 
-            usuemail: decoded.usuemail,
-            usucod: decoded.usucod,
-            usunome: decoded.usunome, 
-            usuadm: decoded.usuadm,
-            usupv: decoded.usupv,
-            usuest: decoded.usuest,
-            empusaest: decoded.empusaest,
-            empusapv: decoded.empusapv
-        }, 'chave-secreta', { expiresIn: '60m' });
+        const decoded = jwt.verify(token, JWT_SECRET);
 
-    // gauda o novo token com mais 10m em cookies
+        const novoToken = jwt.sign({
+            usuemail:  decoded.usuemail,
+            usucod:    decoded.usucod,
+            usunome:   decoded.usunome,
+            usuadm:    decoded.usuadm,
+            usupv:     decoded.usupv,
+            usuest:    decoded.usuest,
+            empusaest: decoded.empusaest,
+            empusapv:  decoded.empusapv,
+        }, JWT_SECRET, { expiresIn: '60m' });
+
         res.cookie('token', novoToken, {
-        httpOnly: true,
-        sameSite: 'Strict',
-        secure: process.env.HTTPS,
+            httpOnly: true,
+            sameSite: 'Strict',
+            secure: process.env.NODE_ENV === 'production',
         });
         // Remove os outros cookies inseguros, se ainda existirem
         res.clearCookie('usucod');

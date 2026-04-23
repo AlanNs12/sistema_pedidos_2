@@ -1,0 +1,53 @@
+.chart-card {
+      min-height: 420px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #f8f9fa;
+      width: 100%;
+      /* 🔥 garante 100% da largura do card */
+      height: 100%;
+      /* acompanha altura total do container */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chart-wrapper canvas {
+      width: 100% !important;
+      height: 320px !important;
+      background-color: #fff !important;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* overlay com os placeholders do Bootstrap */
+    .skeleton-overlay {
+      position: absolute;
+      inset: 0;
+      padding: 20px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      pointer-events: none;
+      /* evita clique no overlay */
+    }
+
+    /* enquanto carrega, esconde o canvas */
+    .chart-wrapper.loading canvas {
+      visibility: hidden;
+    }
+
+    /* quando sair de loading, some o overlay */
+    .chart-wrapper:not(.loading) .skeleton-overlay {
+      display: none;
+    }
+
+    .subtle {
+      color: #6c757d;
+      font-size: .82rem;
+    }

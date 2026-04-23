@@ -4,6 +4,11 @@ const id = params.get("id");
 const modelo = params.get("modelo");
 const marcascod = params.get("marcascod");
 
+/**
+ * Formata um valor numérico para moeda brasileira (BRL)
+ * @param {number} valor - Valor a ser formatado
+ * @returns {string} Valor formatado (ex: R$ 10,00)
+ */
 function formatarMoeda(valor) {
   return Number(valor).toLocaleString("pt-BR", {
     style: "currency",
@@ -11,7 +16,7 @@ function formatarMoeda(valor) {
   });
 }
 
-//Busca o nome do modelo pelo id usando fetch e exibe no elemento com id 'modeloTitulo'
+// Busca o nome do modelo pelo id e exibe no elemento com id 'modeloTitulo'
 fetch(`${BASE_URL}/mod/${modelo}`)
   .then((res) => res.json())
   .then((modelo) => {
@@ -24,7 +29,7 @@ fetch(`${BASE_URL}/mod/${modelo}`)
     document.getElementById("modeloTitulo").textContent = "";
   });
 
-//popular o tipo da peça
+// Popula o tipo da peça no breadcrumb
 fetch(`${BASE_URL}/modtipo/${id}?modelo=${modelo}`)
   .then((res) => res.json())
   .then((modtipo) => {
@@ -45,19 +50,29 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((dados) => {
       const corpoTabela = document.getElementById("corpoTabela");
       corpoTabela.innerHTML = ""; // Limpa o conteúdo atual da tabela
+      //console.log(dados);
 
       dados.forEach((dado) => {
         const item = document.createElement("div");
         item.className = "cart-item";
         item.dataset.preco = dado.provl;
+        const isDisabled = dado.prosemest === "S";
         item.innerHTML = `
             <div class="item-name">${dado.prodes}</div>
             <div class="item-tipo">${dado.tipodes}</div>
-            <div class="item-price">${formatarMoeda(
-              dado.provl
-            )} <button class="btn btn-info btn-sm btn-add" onclick="adicionarAoCarrinho('${
-          dado.procod
-        }')">Adicionar</button></div>
+            <div class="item-price">${formatarMoeda(dado.provl)} 
+              <button class="${
+                isDisabled
+                  ? "btn btn-danger btn-sm btn-add"
+                  : "btn btn-primary btn-add"
+              }" ${
+          isDisabled
+            ? 'disabled title="Em Falta"'
+            : `onclick="adicionarAoCarrinho('${dado.procod}')"`
+        }>
+          ${isDisabled ? "Em Falta" : "Adicionar"}
+              </button>
+            </div>
           `;
 
         corpoTabela.appendChild(item);
@@ -229,7 +244,7 @@ window.adicionarAoCarrinho = async function (procod) {
     const response = await fetch(`/proCoresDisponiveis/${procod}`);
     const cores = await response.json();
 
-    // console.log("Cores disponíveis:", cores);
+     console.log("Cores disponíveis:", cores);
 
     if (cores && cores.length > 0 && cores[0].cornome !== "") {
       exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde);
@@ -238,12 +253,25 @@ window.adicionarAoCarrinho = async function (procod) {
     }
   } catch (error) {
     console.error("Erro ao buscar cores:", error);
-    alert("Erro ao verificar cores do produto.");
+    showToast("Erro ao verificar cores do produto.", "error");
   }
 };
 
+/**
+ * Exibe um modal para seleção de cor do produto
+ * Cria um backdrop (overlay cinza) e um modal customizado para selecionar a cor
+ * @param {Array} cores - Lista de cores disponíveis
+ * @param {number} procod - Código do produto
+ * @param {string} nome - Nome do produto
+ * @param {string} tipo - Tipo do produto
+ * @param {string} marca - Marca do produto
+ * @param {number} preco - Preço do produto
+ * @param {number} qtde - Quantidade a adicionar
+ */
 function exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde) {
+  // Cria o backdrop (overlay cinza de fundo)
   const backdrop = document.createElement("div");
+  backdrop.id = "modal-cor-backdrop";
   backdrop.style.position = "fixed";
   backdrop.style.top = "0";
   backdrop.style.left = "0";
@@ -252,7 +280,9 @@ function exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde) {
   backdrop.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
   backdrop.style.zIndex = "9998";
 
+  // Cria o modal
   const modal = document.createElement("div");
+  modal.id = "modal-cor-selecao";
   modal.style.position = "fixed";
   modal.style.top = "50%";
   modal.style.left = "50%";
@@ -263,89 +293,138 @@ function exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde) {
   modal.style.boxShadow = "0 2px 10px rgba(0,0,0,0.3)";
   modal.style.zIndex = "9999";
 
+  // Monta HTML do modal com indicação de cores sem estoque
   modal.innerHTML = `
-  <style>
-    #modal-cor-container {
-      max-width: 300px;
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    <style>
+      #modal-cor-container {
+        max-width: 300px;
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      #modal-cor-container p {
+        font-size: 16px;
+        margin: 0;
+        font-weight: 600;
+        text-align: center;
+      }
+      #modal-cor-container select {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      #modal-cor-botoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+      #modal-cor-botoes button {
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      #btn-confirmar-cor {
+        background-color: #28a745;
+        color: white;
+      }
+      #btn-confirmar-cor:hover {
+        background-color: #218838;
+      }
+      #btn-cancelar-cor {
+        background-color: #dc3545;
+        color: white;
+      }
+      #btn-cancelar-cor:hover {
+        background-color: #c82333;
+      }
+      #select-cor option[disabled] {
+        color: #888;
+        background: #f5f5f5;
+        font-style: italic;
+      }
+    </style>
 
-    #modal-cor-container p {
-      font-size: 16px;
-      margin: 0;
-      font-weight: 600;
-      text-align: center;
-    }
+    <div id="modal-cor-container">
+      <p>Escolha a cor do produto:</p>
+      <select id="select-cor">
+  ${cores
+    .map((cor) => {
+      const idCor = cor.corcod;
 
-    #modal-cor-container select {
-      width: 100%;
-      padding: 8px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
+      console.log("Cor id:",  idCor);
+      const semEstoque = cor.procorsemest === "S";
+      const label = `${cor.cornome}${semEstoque ? " (Sem estoque)" : ""}`;
 
-    #modal-cor-botoes {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-
-    #modal-cor-botoes button {
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    #btn-confirmar-cor {
-      background-color: #28a745;
-      color: white;
-    }
-
-    #btn-confirmar-cor:hover {
-      background-color: #218838;
-    }
-
-    #btn-cancelar-cor {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    #btn-cancelar-cor:hover {
-      background-color: #c82333;
-    }
-  </style>
-
-  <div id="modal-cor-container">
-    <p>Escolha a cor do produto:</p>
-    <select id="select-cor">
-      ${cores
-        .map((cor) => `<option value="${cor.procod}">${cor.cornome}</option>`)
-        .join("")}
-    </select>
-    <div id="modal-cor-botoes">
-      <button id="btn-cancelar-cor">Cancelar</button>
-      <button id="btn-confirmar-cor">Confirmar</button>
+      return `
+        <option value="${idCor}" data-nome="${cor.cornome}"
+          ${semEstoque ? 'disabled data-semest="S"' : ""}>
+          ${label}
+        </option>
+      `;
+    })
+    .join("")}
+</select>
+      <div id="modal-cor-botoes">
+        <button id="btn-cancelar-cor">Cancelar</button>
+        <button id="btn-confirmar-cor">Confirmar</button>
+      </div>
     </div>
-  </div>
-`;
+    <script>
+      (function(){
+        const select = document.getElementById('select-cor');
+        const confirmBtn = document.getElementById('btn-confirmar-cor');
+        // Se todas as opções estiverem sem estoque, desabilita confirmar
+        if ([...select.options].every(o => o.disabled)) {
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = 'Indisponível';
+          confirmBtn.style.backgroundColor = '#999';
+          confirmBtn.style.cursor = 'not-allowed';
+        } else {
+          // Seleciona automaticamente a primeira opção disponível
+          const firstAvailable = [...select.options].find(o => !o.disabled);
+          if (firstAvailable) firstAvailable.selected = true;
+        }
+      })();
+    </script>
+  `;
 
   document.body.appendChild(backdrop);
   document.body.appendChild(modal);
 
-  document.getElementById("btn-confirmar-cor").onclick = function () {
+  /**
+   * Função para fechar o modal e remover o backdrop
+   * Garante que o overlay cinza seja removido corretamente
+   */
+  function fecharModalCores() {
+    if (modal && modal.parentNode) {
+      modal.remove();
+    }
+    if (backdrop && backdrop.parentNode) {
+      backdrop.remove();
+    }
+  }
+
+  // Fecha o modal ao clicar no backdrop (overlay cinza)
+  backdrop.addEventListener("click", function () {
+    fecharModalCores();
+  });
+
+  // Handler do botão Confirmar - usa addEventListener para consistência
+  const btnConfirmar = document.getElementById("btn-confirmar-cor");
+  btnConfirmar.addEventListener("click", function () {
     const corSelecionada =
       document.getElementById("select-cor").options[
         document.getElementById("select-cor").selectedIndex
       ].text;
     const idComCor = `${procod}-${corSelecionada}`;
     const nomeComCor = `${nome} (${corSelecionada})`;
+    const idCorSelecionada = Number(document.getElementById("select-cor").value) || null;
 
     adicionarProdutoAoCarrinho(
       idComCor,
@@ -354,18 +433,31 @@ function exibirComboBoxCores(cores, procod, nome, tipo, marca, preco, qtde) {
       marca,
       preco,
       qtde,
-      corSelecionada
+      corSelecionada,
+      idCorSelecionada
     );
 
-    modal.remove();
-    backdrop.remove();
-  };
+    fecharModalCores();
+  });
 
-  document.getElementById("btn-cancelar-cor").onclick = function () {
-    modal.remove();
-    backdrop.remove();
-  };
+  // Handler do botão Cancelar - usa addEventListener para consistência
+  const btnCancelar = document.getElementById("btn-cancelar-cor");
+  btnCancelar.addEventListener("click", function () {
+    fecharModalCores();
+  });
 }
+
+/**
+ * Adiciona um produto ao carrinho do localStorage
+ * @param {string} id - Identificador único do produto (pode incluir cor)
+ * @param {string} nome - Nome do produto
+ * @param {string} tipo - Tipo do produto
+ * @param {string} marca - Marca do produto
+ * @param {number} preco - Preço do produto
+ * @param {number} qtde - Quantidade a adicionar
+ * @param {string} corSelecionada - Cor selecionada (opcional)
+ * @param {string} idCorSelecionada - ID da cor selecionada (opcional)
+ */
 
 function adicionarProdutoAoCarrinho(
   id,
@@ -374,7 +466,8 @@ function adicionarProdutoAoCarrinho(
   marca,
   preco,
   qtde,
-  corSelecionada
+  corSelecionada,
+  idCorSelecionada
 ) {
   let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
@@ -382,7 +475,7 @@ function adicionarProdutoAoCarrinho(
   if (idx > -1) {
     cart[idx].qt += qtde;
   } else {
-    cart.push({ id, nome, tipo, marca, preco, qt: qtde, corSelecionada });
+    cart.push({ id, nome, tipo, marca, preco, qt: qtde, corSelecionada,idCorSelecionada });
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));

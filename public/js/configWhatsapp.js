@@ -59,7 +59,7 @@ document.getElementById('saveWhats').addEventListener('click', function(event) {
     const emprazao = document.getElementById('razaoSocial').value;
 
     if (!whats1.match(/^\+\d{2}\(\d{2}\)\d{5}-\d{4}$/) || !whats2.match(/^\+\d{2}\(\d{2}\)\d{5}-\d{4}$/)) {
-        alert('Por favor, insira números de WhatsApp válidos.');
+        showToast('Por favor, insira números de WhatsApp válidos.', 'warning');
         return;
     }
 
@@ -79,10 +79,10 @@ document.getElementById('saveWhats').addEventListener('click', function(event) {
     })
     .then(response => response.json())
     .then(data => {
-        alert('Dados atualizados com sucesso!');
+        showToast('Dados atualizados com sucesso!', 'success');
         window.location.reload();
     })
     .catch(error => {
-        alert('Erro ao atualizar os números de WhatsApp. Por favor, tente novamente.');
+        showToast('Erro ao atualizar os números de WhatsApp. Por favor, tente novamente.', 'error');
     });
 });

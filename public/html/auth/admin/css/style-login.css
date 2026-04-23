@@ -29,13 +29,7 @@
   /* ===============================
 Container e cartão do login
 ================================ */
-  .login-page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-  }
+  
 
   .login-card {
     background: #ffffff;
@@ -60,7 +54,7 @@ Container e cartão do login
     to {
       transform: translateY(0);
       opacity: 1;
-    }
+    } 
   }
 
   /* ===============================
@@ -88,7 +82,6 @@ Logo e título
     font-size: 1.8rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: #0d6efd;
   }
 
   /* ===============================
@@ -142,33 +135,9 @@ Checkbox e botões
     transition: all 0.25s ease;
   }
 
-  .btn-primary {
-    background-color: #0d6efd;
-    color: white;
-    border: none;
-  }
+  
 
-  .btn-primary:hover {
-    background-color: #0b5ed7;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-  }
-
-  .btn-outline-dark {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    color: #333;
-  }
-
-  .btn-outline-dark:hover {
-    background-color: #f3f4f6;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .btn i {
-    margin-right: 6px;
-  }
+  
 
   /* ===============================
 Responsividade

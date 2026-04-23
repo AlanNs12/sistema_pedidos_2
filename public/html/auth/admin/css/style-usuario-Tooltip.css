@@ -1,0 +1,70 @@
+.form-check {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* Ícone de interrogação */
+.info-icon {
+  margin-left: 6px;
+  color: #6c757d;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  user-select: none;
+}
+
+.info-icon:hover {
+  color: #0d6efd;
+}
+
+/* Tooltip base */
+.form-check .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+  position: absolute;
+  z-index: 2000;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  bottom: 120%;
+  width: max-content;
+  max-width: 320px;
+  background-color: rgba(0,0,0,.88);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
+
+/* Seta da tooltip */
+.form-check .tooltip-text::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100%;
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0,0,0,.88) transparent transparent transparent;
+}
+
+/* Mostra tooltip no hover */
+.form-check .info-icon:hover + .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* Mostra tooltip ao clicar (classe adicionada via JS) */
+.form-check .tooltip-text.active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}

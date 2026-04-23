@@ -1,0 +1,52 @@
+name: Deploy via SSH (git pull + systemctl)
+
+on:
+  push:
+    branches:
+      - main            # dispara a cada push na main
+      - release         # dispara a cada push na release
+  workflow_dispatch:     # ou manualmente no Actions
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare SSH known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      - name: Run remote deploy scripts
+        run: |
+          ssh -p "${{ secrets.SSH_PORT }}" "root@${{ secrets.SSH_HOST }}" '
+            set -e
+            chmod +x /root/deployJpPecas.sh
+            chmod +x /root/deployUTIdosCelulares.sh
+            /root/deployJpPecas.sh
+            /root/deployUTIdosCelulares.sh
+          '
+
+  release:
+    if: github.ref == 'refs/heads/release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare SSH known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.SSH_PORT_RELEASE }}" "${{ secrets.SSH_HOST_RELEASE }}" >> ~/.ssh/known_hosts
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY_RELEASE }}" > ~/.ssh/release_orderUp
+          chmod 600 ~/.ssh/release_orderUp
+      - name: Run remote deploy scripts
+        run: |
+          ssh -i ~/.ssh/release_orderUp -o StrictHostKeyChecking=no -p "${{ secrets.SSH_PORT_RELEASE }}" "root@${{ secrets.SSH_HOST_RELEASE }}" '
+            set -e
+            chmod +x /root/releaseOrderUp.sh
+            /root/releaseOrderUp.sh
+          '
+

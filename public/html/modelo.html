@@ -6,46 +6,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title id="title"></title>
   <!--Link proprios projeto-->
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/style-modelo.css" />
+  <link rel="stylesheet" href="../css/style.css" /> 
+  <link rel="stylesheet" href="../css/style-modelo.css" /> 
+  <link rel="stylesheet" href="/html/auth/admin/css/style-flexbox.css" />
   <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon" />
   <link rel="apple-touch-icon" sizes="180x180" href="/uploads/apple-touch-icon.png" />
   <!--links bootstrap-->
 
-  <link rel="stylesheet" href="../css/style-main.css" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+    <!--link tema bootstrap-->
+    <link rel="stylesheet" href="../css/tema-bootstrap.css"/>
+    <!--Fim link tema bootstrap-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="bg-light inter">
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-light shadow-sm rounded fixed-top p-2 m-1">
-      <a class="navbar-brand" href="index" id="nomeEmpresa"><img src="/uploads/logo.jpg" width="30" height="30"
-          alt="" /></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="index">Inicio <span class="sr-only">(Página atual)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="painel">Acesso</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+  <div class="wrapper">
+    <header id="header">
+    <!--Conteudo do header adicionado via JS-->
   </header>
-  <div class="page-wrapper">
-    <main>
+
+    <main class="m-3">
       <div class="bg-white quadro">
         <div class="navegacao">
-          <div class="row">
+          <div class="row justify-content-between">
             <div class="col-auto mr-auto">
               <h2 class="inter">Modelos</h2>
             </div>
@@ -66,12 +54,24 @@
             </div>
           </div>
           <div class="row p-3">
-            <div class="input-group input-pesquisa">
-              <span class="input-group-text bg-white border-info" for="pesquisa">
-                <i class="bi bi-search text-info"></i>
-              </span>
-              <input class="form-control border-info" type="search" placeholder="Pesquisar" aria-label="Pesquisar"
-                id="pesquisa" />
+            <label for="pesquisa" class="m-2 fw-medium">Pesquisa Geral</label>
+            <div class="input-group">
+                <span class="input-group-text text-primary bg-white border border-primary " for="pesquisa">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input class="form-control border-primary" type="search" placeholder="Pesquisar" aria-label="Pesquisar"
+                    id="pesquisa">
+                
+                    <a class="btn btn-primary d-flex align-items-center gap-2" 
+                        id="openCartModal" 
+                        style="background: linear-gradient(145deg, #2196F3, #1976D2); 
+                              border: none; 
+                              box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+                              transition: all 0.3s ease;">
+                        <i class="bi bi-cart2"></i>
+                        <span>Carrinho</span>
+                    </a>
+                </span>
             </div>
           </div>
         </div>
@@ -95,53 +95,39 @@
         </div>
       </div>
     </main>
-    <footer class="border-top py-4 mt-5">
-      <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-        <div class="small text-black">
-          © <span id="y"></span> Sistema Pedidos via Whatsapp —
-          <a href="#" class="text-black link-dark">MTTR Tecnologia que transforma seu negócio.</a>
-        </div>
-      </div>
+    <footer id="footer">
+      <!--Conteudo do footer adicionado via JS-->
     </footer>
   </div>
 
   <!-- Modal do Carrinho -->
-  <a href="javascript:void(0);" class="button-cart" id="openCartModal">
-    <i class="bi bi-cart4"></i>
-  </a>
   <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="cartModalLabel">Itens no Carrinho</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
         <div class="modal-body" id="cartItems">
           <!-- Itens do carrinho serão inseridos aqui via JS -->
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Fechar
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
         </div>
       </div>
-    </div>
-  </div>
-  <script src="/config.js"></script>
-  <script src="../js/nomeEmpresa.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-    crossorigin="anonymous"></script>
-  <script src="../js/modelo.js"></script>
+
+      <script src="../js/componentes.js"></script>
+      <script src="/config.js"></script>
+      <script src="../js/nomeEmpresa.js"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+      <script src="../js/modelo.js"></script>
 </body>
 
 </html>

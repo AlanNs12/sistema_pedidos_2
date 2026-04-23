@@ -10,10 +10,8 @@
   z-index: 999; /* atrás do popup */
 }
 .popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 350px;
+  min-width: 250px;
   background: white;
   padding: 20px;
   border-radius: 10px;

@@ -100,13 +100,15 @@ exports.atualizarOrdemModelos = async (req, res) => {
       return res.status(400).json({ message: "Ordem inválida" });
     }
 
-    for (let i = 0; i < ordem.length; i++) {
-      const item = ordem[i];
-      await pool.query(
-        `UPDATE modelo SET ordem = $1 WHERE modcod = $2`,
-        [i + 1, item.id] // usa o índice + 1 como nova ordem
-      );
-    }
+    const ids    = ordem.map((item) => item.id);
+    const ordens = ordem.map((_, i) => i + 1);
+
+    await pool.query(
+      `UPDATE modelo SET ordem = v.ordem
+       FROM (SELECT UNNEST($1::int[]) AS id, UNNEST($2::int[]) AS ordem) AS v
+       WHERE modcod = v.id`,
+      [ids, ordens]
+    );
 
     return res.status(200).json({ message: "Ordem atualizada com sucesso!" });
   } catch (error) {

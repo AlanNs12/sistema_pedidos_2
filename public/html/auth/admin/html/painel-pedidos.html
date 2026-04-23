@@ -1,289 +1,405 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="title"></title>
+    <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/uploads/apple-touch-icon.png"
+    />
+    <!--Links proprios-->
+    <link rel="stylesheet" href="/html/auth/admin/css/style-pedidos.css" />
+    <link rel="stylesheet" href="/html/auth/admin/css/style-flexbox.css" />
+    <link rel="stylesheet" href="/html/auth/admin/css/style.css" />
+    <link rel="stylesheet" href="/html/auth/admin/css/style-components.css" />
+    <!--links bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <!--Link tema personalizado bootstrap-->
+    <link rel="stylesheet" href="../../../../css/tema-bootstrap.css" />
+    <!--link tema-->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="title"></title>
-  <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/apple-touch-icon.png" />
-  <!--Links proprios-->
-  <link rel="stylesheet" href="../css/style-pedidos.css" />
-  <link rel="stylesheet" href="/html/auth/admin/css/style-flexbox.css" />
-  <link rel="stylesheet" href="/html/auth/admin/css/style.css" />
-  <link rel="stylesheet" href="/html/auth/admin/css/style-components.css" />
-  <!--links bootstrap-->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-    integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-</head>
-
-<body class="bg-light">
-  <div class="wrapper">
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm bg-white rounded p-2 m-1">
-        <a class="navbar-brand" href="index" id="nomeEmpresa"><img src="/uploads/logo.jpg" width="30" height="30"
-            alt="" /></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="index">Inicio<span class="visually-hidden">(Página atual)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="painel">Painel</a>
-            </li>
-            <li class="nav-item" id="pedidos">
-              <a class="nav-link" href="pedidos">Pedidos</a>
-            </li>
-            <li class="nav-item" id="estoque">
-              <a class="nav-link" href="estoque">Estoque</a>
-            </li>
-            <li class="nav-item" id="users">
-              <a class="nav-link" href="users">Usuários</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <i class="bi bi-person-fill"></i> Conta
-              </a>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="perfil">Perfil</a>
-                <a class="dropdown-item" href="configuracoes" id="configuracoes">Configurações</a>
-                <div class="dropdown-divider"></div>
-                <button class="dropdown-item" id="buttonSair">Sair</button>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </header>
-    <main class="p-3">
-      <div class="container">
-        <div class="panel-hero mb-4">
-          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3">
-            <div class="d-flex align-items-center gap-3">
-              <div class="icon-circle" aria-hidden="true">
-                <i class="bi bi-box-seam text-primary"></i>
-              </div>
-              <div>
-                <h1 class="h4 mb-0">Painel de Pedidos</h1>
-                <div class="text-muted small">
-                  Gerencie os pedidos recebidos, acompanhe o status e tome ações.
+  <body class="bg-light">
+    <div class="wrapper">
+      <header id="header-admin">
+        <!--Conteudo do header adicionado via JS-->
+      </header>
+      <main class="p-3">
+        <div class="container">
+          <div class="panel-hero mb-4">
+            <div
+              class="d-flex flex-column flex-md-row justify-content-between gap-3"
+            >
+              <div class="d-flex align-items-center gap-3">
+                <div class="icon-circle" aria-hidden="true">
+                  <i class="bi bi-box-seam text-primary"></i>
+                </div>
+                <div>
+                  <h1 class="h4 mb-0">Painel de Pedidos</h1>
+                  <div class="text-muted small">
+                    Gerencie os pedidos recebidos, acompanhe o status e tome
+                    ações.
+                  </div>
+                  <!-- Botão -->
                 </div>
               </div>
+              <div class="flex-shrink-0">
+                <a
+                  href="index"
+                  class="button-color-1 text-white d-flex align-items-center"
+                >
+                  <i class="bi bi-clipboard2-plus-fill me-2"></i>
+                  Novo Pedido
+                </a>
+              </div>
             </div>
-
           </div>
         </div>
-      </div>
-      <div class="container bg-light mb-2 border-1 rounded p-2">
-
-        <h2>Acompanhamento <i class="bi bi-bar-chart"></i></h2>
-        <div class="row g-3">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="card h-100 border-0 shadow-sm text-white" style="
+        <div class="container bg-light mb-2 border-1 rounded p-2">
+          <h2>Acompanhamento <i class="bi bi-bar-chart"></i></h2>
+          <div class="row g-3">
+            <div class="col-12 col-sm-6 col-md-3">
+              <div
+                class="card h-100 border-0 shadow-sm text-white"
+                style="
                   background: linear-gradient(135deg, #ff9a3c, #ff6a00);
                   border-radius: 12px;
-                  transition: transform 0.15s;">
-              <div class="card-body d-flex align-items-center gap-3">
-                <div class="rounded-circle d-flex align-items-center justify-content-center" style="
+                  transition: transform 0.15s;
+                "
+              >
+                <div class="card-body d-flex align-items-center gap-3">
+                  <div
+                    class="rounded-circle d-flex align-items-center justify-content-center"
+                    style="
                       width: 56px;
                       height: 56px;
                       background: rgba(255, 255, 255, 0.18);
-                      backdrop-filter: blur(4px);">
-                  <i class="bi bi-card-list fs-3"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="small text-white-50 text-uppercase">
-                    Pedidos Pendentes
+                      backdrop-filter: blur(4px);
+                    "
+                  >
+                    <i class="bi bi-card-list fs-3"></i>
                   </div>
-                  <div class="d-flex align-items-baseline gap-2">
-                    <h3 id="totalPedPendentes" class="mb-0">0</h3>
-                    <small class="small text-white-50">hoje</small>
+                  <div class="flex-grow-1">
+                    <div class="small text-white-50 text-uppercase">
+                      Pedidos Pendentes
+                    </div>
+                    <div class="d-flex align-items-baseline gap-2">
+                      <h3 id="totalPedPendentes" class="mb-0">0</h3>
+                      <small class="small text-white-50">Aguardando</small>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="card h-100 border-0 shadow-sm text-white" style="
+            <div class="col-12 col-sm-6 col-md-3">
+              <div
+                class="card h-100 border-0 shadow-sm text-white"
+                style="
                   background: linear-gradient(135deg, #6f42c1, #4b26a8);
                   border-radius: 12px;
-                  transition: transform 0.15s;">
-              <div class="card-body d-flex align-items-center gap-3">
-                <div class="rounded-circle d-flex align-items-center justify-content-center" style="
+                  transition: transform 0.15s;
+                "
+              >
+                <div class="card-body d-flex align-items-center gap-3">
+                  <div
+                    class="rounded-circle d-flex align-items-center justify-content-center"
+                    style="
                       width: 56px;
                       height: 56px;
                       background: rgba(255, 255, 255, 0.12);
-                      backdrop-filter: blur(4px);">
-                  <i class="bi bi-shop fs-3"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="small text-white-50 text-uppercase">
-                    Pedidos Balcão
+                      backdrop-filter: blur(4px);
+                    "
+                  >
+                    <i class="bi bi-shop fs-3"></i>
                   </div>
-                  <div class="d-flex align-items-baseline gap-2">
-                    <h3 id="totalPedBalcao" class="mb-0">0</h3>
-                    <small class="small text-white-50">últimas 24h</small>
+                  <div class="flex-grow-1">
+                    <div class="small text-white-50 text-uppercase">
+                      Pedidos Balcão
+                    </div>
+                    <div class="d-flex align-items-baseline gap-2">
+                      <h3 id="totalPedBalcao" class="mb-0">0</h3>
+                      <small class="small text-white-50"
+                        >Retiradas Balcão</small
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="card h-100 border-0 shadow-sm text-white" style="
+            <div class="col-12 col-sm-6 col-md-3">
+              <div
+                class="card h-100 border-0 shadow-sm text-white"
+                style="
                   background: linear-gradient(135deg, #12c2e9, #0652a6);
                   border-radius: 12px;
-                  transition: transform 0.15s;">
-              <div class="card-body d-flex align-items-center gap-3">
-                <div class="rounded-circle d-flex align-items-center justify-content-center" style="
+                  transition: transform 0.15s;
+                "
+              >
+                <div class="card-body d-flex align-items-center gap-3">
+                  <div
+                    class="rounded-circle d-flex align-items-center justify-content-center"
+                    style="
                       width: 56px;
                       height: 56px;
                       background: rgba(255, 255, 255, 0.12);
-                      backdrop-filter: blur(4px);">
-                  <i class="bi bi-truck fs-3"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="small text-white-50 text-uppercase">
-                    Pedidos Entrega
+                      backdrop-filter: blur(4px);
+                    "
+                  >
+                    <i class="bi bi-truck fs-3"></i>
                   </div>
-                  <div class="d-flex align-items-baseline gap-2">
-                    <h3 id="totalPedEntrega" class="mb-0">0</h3>
-                    <small class="small text-white-50">em rota</small>
+                  <div class="flex-grow-1">
+                    <div class="small text-white-50 text-uppercase">
+                      Pedidos Entrega
+                    </div>
+                    <div class="d-flex align-items-baseline gap-2">
+                      <h3 id="totalPedEntrega" class="mb-0">0</h3>
+                      <small class="small text-white-50">Para entregas</small>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="card h-100 border-0 shadow-sm text-white" style="
+            <div class="col-12 col-sm-6 col-md-3">
+              <div
+                class="card h-100 border-0 shadow-sm text-white"
+                style="
                   background: linear-gradient(135deg, #28a745, #0fa65a);
                   border-radius: 12px;
-                  transition: transform 0.15s;">
-              <div class="card-body d-flex align-items-center gap-3">
-                <div class="rounded-circle d-flex align-items-center justify-content-center" style="
+                  transition: transform 0.15s;
+                "
+              >
+                <div class="card-body d-flex align-items-center gap-3">
+                  <div
+                    class="rounded-circle d-flex align-items-center justify-content-center"
+                    style="
                       width: 56px;
                       height: 56px;
                       background: rgba(255, 255, 255, 0.12);
-                      backdrop-filter: blur(4px);">
-                  <i class="bi bi-check-circle fs-3"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="small text-white-50 text-uppercase">
-                    Pedidos Finalizados
+                      backdrop-filter: blur(4px);
+                    "
+                  >
+                    <i class="bi bi-check-circle fs-3"></i>
                   </div>
-                  <div class="d-flex align-items-baseline gap-2">
-                    <h3 id="totalPedConfirmados" class="mb-0">0</h3>
-                    <small class="small text-white-50">concluídos</small>
+                  <div class="flex-grow-1">
+                    <div class="small text-white-50 text-uppercase">
+                      Pedidos Finalizados
+                    </div>
+                    <div class="d-flex align-items-baseline gap-2">
+                      <h3 id="totalPedConfirmados" class="mb-0">0</h3>
+                      <small class="small text-white-50">concluídos</small>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            <form
+              class="row gx-2 gy-2 mb-3 align-items-center"
+              id="formFiltroPeriodo"
+              onsubmit="return false;"
+            >
+              <div class="col-auto">
+                <label
+                  for="filtroPeriodoSelect"
+                  class="form-label visually-hidden"
+                  >Período</label
+                >
+                <select
+                  id="filtroPeriodoSelect"
+                  class="form-select"
+                  aria-label="Período"
+                >
+                  <option value="todos">Todos</option>
+                  <option value="hoje">Hoje</option>
+                  <option value="ult7">Últimos 7 dias</option>
+                  <option value="ult30">Últimos 30 dias</option>
+                  <option value="personalizado">Personalizado</option>
+                </select>
+              </div>
 
-          <div class="col-12 col-md-6">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <div class="card-title w-100 d-flex align-items-center gap-3 mb-3">
-                  <div class="icon-circle d-flex align-items-center justify-content-center" style="
-         width: 60px;
-         height: 60px;
-         background: rgba(255, 179, 0, 0.279);
-         border-radius: 50%;
-         flex-shrink: 0;
-       ">
-                    <i class="fa-solid fa-list-ul text-black" style="font-size: 1.5rem;"></i>
+              <div class="col-auto">
+                <label for="filtroDataInicio" class="form-label visually-hidden"
+                  >Início</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="filtroDataInicio"
+                  name="dataInicio"
+                  aria-label="Data início"
+                  disabled
+                />
+              </div>
+
+              <div class="col-auto">
+                <label for="filtroDataFim" class="form-label visually-hidden"
+                  >Fim</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="filtroDataFim"
+                  name="dataFim"
+                  aria-label="Data fim"
+                  disabled
+                />
+              </div>
+
+              <div class="col-auto d-flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="btnAplicarFiltroPeriodo"
+                >
+                  Aplicar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  id="btnLimparFiltroPeriodo"
+                >
+                  Limpar
+                </button>
+              </div>
+
+              <div class="col-12">
+                <small class="text-muted"
+                  >Filtre pedidos finalizados por período. Escolha
+                  "Personalizado" para editar datas manualmente.</small
+                >
+              </div>
+            </form>
+
+            <div class="col-12 col-md-6">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <div
+                    class="card-title w-100 d-flex align-items-center gap-3 mb-3"
+                  >
+                    <div
+                      class="icon-circle d-flex align-items-center justify-content-center"
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        background: rgba(255, 179, 0, 0.279);
+                        border-radius: 50%;
+                        flex-shrink: 0;
+                      "
+                    >
+                      <i
+                        class="fa-solid fa-list-ul text-black"
+                        style="font-size: 1.5rem"
+                      ></i>
+                    </div>
+                    <h2 class="mb-0 fw-bold">Pedidos pendentes</h2>
                   </div>
-                  <h2 class="mb-0 fw-bold">Pedidos pendentes</h2>
+
+                  <div>
+                    <div class="scroll-tabela">
+                      <!--Colocar os pedidos pendentes para aparecer dentro dessa div-->
+                      <table class="table text-center">
+                        <thead style="position: sticky; top: 0; z-index: 10">
+                          <tr>
+                            <th scope="col">N. Pedido</th>
+                            <th scope="col">Canal</th>
+                            <th scope="col">Vendedor</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Ações</th>
+                          </tr>
+                        </thead>
+                        <tbody id="corpoTabela"></tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </div>
 
+            <div class="col-12 col-md-6">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <div
+                    class="card-title w-100 d-flex align-items-center gap-3 mb-3"
+                  >
+                    <div
+                      class="icon-circle d-flex align-items-center justify-content-center"
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        background: rgba(4, 255, 0, 0.426);
+                        border-radius: 50%;
+                        flex-shrink: 0;
+                      "
+                    >
+                      <i
+                        class="fa-solid fa-list-check text-black"
+                        style="font-size: 1.5rem"
+                      ></i>
+                    </div>
+                    <h2 class="mb-0 fw-bold">Pedidos Finalizados</h2>
+                  </div>
 
-                <div>
                   <div class="scroll-tabela">
                     <!--Colocar os pedidos pendentes para aparecer dentro dessa div-->
-                    <table class="table text-center table-responsive">
-                      <thead style="position: sticky; top: 0; z-index: 10;">
+                    <table class="table text-center">
+                      <thead style="position: sticky; top: 0; z-index: 10">
                         <tr>
                           <th scope="col">N. Pedido</th>
                           <th scope="col">Canal</th>
-                          <th scope="col">Valor</th>
+                          <th scope="col">Vendedor</th>
+                          <th scope="col text-right">Valor</th>
                           <th scope="col">Ações</th>
                         </tr>
                       </thead>
-                      <tbody id="corpoTabela"></tbody>
+                      <tbody id="corpoTabelaConfirmados"></tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-6">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <div class="card-title w-100 d-flex align-items-center gap-3 mb-3">
-                  <div class="icon-circle d-flex align-items-center justify-content-center" style="
-         width: 60px;
-         height: 60px;
-         background: rgba(4, 255, 0, 0.426);
-         border-radius: 50%;
-         flex-shrink: 0;
-       ">
-
-                    <i class="fa-solid fa-list-check text-black" style="font-size: 1.5rem;"></i>
-                  </div>
-                  <h2 class="mb-0 fw-bold">Pedidos Finalizados</h2>
-                </div>
-
-
-                <div class="scroll-tabela">
-                  <!--Colocar os pedidos pendentes para aparecer dentro dessa div-->
-                  <table class="table text-center">
-                    <thead style="position: sticky; top: 0; z-index: 10;">
-                      <tr>
-                        <th scope="col">N. Pedido</th>
-                        <th scope="col">Canal</th>
-                        <th scope="col text-right">Valor</th>
-                        <th scope="col">Ações</th>
-                      </tr>
-                    </thead>
-                    <tbody id="corpoTabelaConfirmados"></tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </main>
-    <footer class="border-top py-4 bg-white shadow">
-      <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-        <div class="small text-black">
-          © <span id="y"></span> Sistema Pedidos via Whatsapp —
-          <a href="#" class="text-black link-dark">MTTR Tecnologia que transforma seu negócio.</a>
-        </div>
-      </div>
-    </footer>
-  </div>
+      </main>
+      <footer id="footer">
+        <!--Conteudo do footer adicionado via JS-->
+      </footer>
+    </div>
 
-  <!--Script Chart-->
+    <!--Script Chart-->
 
-  <script src="/config.js"></script>
-  <script src="../js/nomeEmpresa.js"></script>
-  <script src="html/auth/js/painel-pedidos.js"></script>
-  <script src="html/auth/js/logout.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-</body>
-
+    <script src="html/auth/js/componentes.js"></script>
+    <script src="/config.js"></script>
+    <script src="../js/nomeEmpresa.js"></script>
+    <script src="html/auth/js/painel-pedidos.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  </body>
 </html>

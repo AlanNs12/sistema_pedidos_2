@@ -1,0 +1,66 @@
+
+    .wrap {
+      max-width: 980px;
+      margin: auto
+    }
+
+    h1 {
+      margin: 0 0 12px
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px
+    }
+
+    input[type="search"] {
+      flex: 1;
+      min-width: 220px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 8px
+    }
+
+    select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 8px
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left
+    }
+
+    th {
+      cursor: pointer;
+      user-select: none
+    }
+
+    .btn {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f8f8f8;
+      text-decoration: none
+    }
+
+    .muted {
+      color: #666;
+      font-size: 12px;
+      margin-top: 4px
+    }
+
+    .right {
+      text-align: right
+    }

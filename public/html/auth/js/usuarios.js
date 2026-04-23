@@ -3,11 +3,9 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 const marcascod = params.get("marcascod");
 
-
 const usersData = [
   //popular table com os dados do modelo
-  { id: 0, nome: ' ', email: ' ', senha: ' ', adm: 'S' ,sta:'A' },
-  
+  { id: 0, nome: " ", email: " ", senha: " ", adm: "S", sta: "A" },
 ];
 
 // Estado
@@ -28,11 +26,11 @@ async function refreshUsers({ keepSearch = true } = {}) {
     users = [...usersData];
 
     // preserva termo de busca atual (ou limpa) e re-renderiza
-    const termo = keepSearch && searchInput ? searchInput.value : '';
+    const termo = keepSearch && searchInput ? searchInput.value : "";
     doSearch(termo);
   } catch (err) {
-    console.error('Failed to refresh users:', err);
-    alert('Erro ao recarregar usuários. Veja console para mais detalhes.');
+    console.error("Failed to refresh users:", err);
+    alert("Erro ao recarregar usuários. Veja console para mais detalhes.");
   }
 }
 
@@ -41,47 +39,58 @@ async function refreshUsers({ keepSearch = true } = {}) {
   await refreshUsers();
 })();
 
-
 // Elementos
-const tbody = document.getElementById('usersTbody');
-const searchInput = document.getElementById('searchInput');
-const resultsInfo = document.getElementById('resultsInfo');
-const emptyState = document.getElementById('emptyState');
+const tbody = document.getElementById("usersTbody");
+const searchInput = document.getElementById("searchInput");
+const resultsInfo = document.getElementById("resultsInfo");
+const emptyState = document.getElementById("emptyState");
 
-const userModalEl = document.getElementById('userModal');
+const userModalEl = document.getElementById("userModal");
 const userModal = new bootstrap.Modal(userModalEl);
-const userForm = document.getElementById('userForm');
-const usuId = document.getElementById('usuId');
-const usuNome = document.getElementById('usuNome');
-const usuEmail = document.getElementById('usuEmail');
-const usuSenha = document.getElementById('usuSenha');
-const usuAdm = document.getElementById('usuAdm');
-const usuSta = document.getElementById('usuSta');
-const usuPv = document.getElementById('usuPv');
-const usuEst = document.getElementById('usuEst');
-const togglePwd = document.getElementById('togglePwd');
-const btnDelete = document.getElementById('btnDelete');
-const btnNew = document.getElementById('btnNew');
-const btnRefresh = document.getElementById('btnRefresh');
+const userForm = document.getElementById("userForm");
+const usuId = document.getElementById("usuId");
+const usuNome = document.getElementById("usuNome");
+const usuEmail = document.getElementById("usuEmail");
+const usuSenha = document.getElementById("usuSenha");
+const usuAdm = document.getElementById("usuAdm");
+const usuSta = document.getElementById("usuSta");
+const usuRca = document.getElementById("usuRca");
+const usuPv = document.getElementById("usuPv");
+const usuEst = document.getElementById("usuEst");
+const togglePwd = document.getElementById("togglePwd");
+const btnDelete = document.getElementById("btnDelete");
+const btnNew = document.getElementById("btnNew");
+const btnRefresh = document.getElementById("btnRefresh");
 
 // Render da tabela
 function renderTable(list) {
-  tbody.innerHTML = '';
+  tbody.innerHTML = "";
   if (!list.length) {
-    emptyState.style.display = 'block';
+    emptyState.style.display = "block";
   } else {
-    emptyState.style.display = 'none';
+    emptyState.style.display = "none";
     for (const u of list) {
-      const tr = document.createElement('tr');
+      const tr = document.createElement("tr");
       tr.dataset.usucod = u.usucod;
       tr.innerHTML = `
             
             <!--<td>${escapeHtml(u.usunome)}</td>-->
+            <td>${u.usucod}</td>
             <td>${escapeHtml(u.usuemail)}</td>
-            <td>${u.usuadm === 'S' ? '<span class="badge bg-success">Sim</span>' : '<span class="badge bg-secondary">Não</span>'}</td>
-            <td>${u.ususta === 'A' ? '<span class="badge bg-success">Ativo</span>' : u.ususta === 'I' ? '<span class="badge bg-warning text-dark">Inativo</span>' : '<span class="badge bg-danger">Excluído</span>'}</td>
+            <td>${
+              u.usuadm === "S"
+                ? '<span class="badge bg-success">Sim</span>'
+                : '<span class="badge bg-secondary">Não</span>'
+            }</td>
+            <td>${
+              u.ususta === "A"
+                ? '<span class="badge bg-success">Ativo</span>'
+                : u.ususta === "I"
+                ? '<span class="badge bg-warning text-dark">Inativo</span>'
+                : '<span class="badge bg-danger">Excluído</span>'
+            }</td>
           `;
-      tr.addEventListener('click', () => openUserModal(u.usucod));
+      tr.addEventListener("click", () => openUserModal(u.usucod));
       tbody.appendChild(tr);
     }
   }
@@ -94,10 +103,11 @@ function doSearch(term) {
   if (!q) {
     filtered = [...users];
   } else {
-    filtered = users.filter(u =>
-      String(u.usucod).includes(q) ||
-      u.usunome.toLowerCase().includes(q) ||
-      u.usuemail.toLowerCase().includes(q)
+    filtered = users.filter(
+      (u) =>
+        String(u.usucod).includes(q) ||
+        u.usunome.toLowerCase().includes(q) ||
+        u.usuemail.toLowerCase().includes(q)
     );
   }
   renderTable(filtered);
@@ -105,26 +115,27 @@ function doSearch(term) {
 
 // Abrir modal preenchido
 function openUserModal(usucod) {
-  const u = users.find(x => x.usucod == usucod);
+  const u = users.find((x) => x.usucod == usucod);
   if (!u) return;
-  console.log(u.usuemail.length)
+  //console.log(u.usuemail.length);
   if (u.usuemail.length >= 3) {
-  usuId.value = u.usucod;
-  usuNome.value = u.usunome;
-  usuEmail.value = u.usuemail;
-  usuEmail.disabled = true; 
-  usuSenha.value = ''; 
-  usuSenha.type = 'password';
-  usuAdm.checked = u.usuadm === 'S';
-  usuPv.checked = u.usupv === 'S';
-  usuEst.checked = u.usuest === 'S';
-  usuSta.checked = u.ususta === 'A' ? true : (u.ususta === 'I' ? false : false);
-  userModal.show();
-  } 
+    usuId.value = u.usucod;
+    usuNome.value = u.usunome;
+    usuEmail.value = u.usuemail;
+    usuEmail.disabled = true;
+    usuSenha.value = "";
+    usuSenha.type = "password";
+    usuAdm.checked = u.usuadm === "S";
+    usuPv.checked = u.usupv === "S";
+    usuEst.checked = u.usuest === "S";
+    usuSta.checked = u.ususta === "A" ? true : u.ususta === "I" ? false : false;
+    usuRca.checked = u.usurca === "S";
+    userModal.show();
+  }
 }
 
 // salvar registro na api
-userForm.addEventListener('submit', async (ev) => {
+userForm.addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const id = usuId.value;
   const email = usuEmail.value.trim();
@@ -132,10 +143,11 @@ userForm.addEventListener('submit', async (ev) => {
     usunome: usuNome.value.trim(),
     usuemail: usuEmail.value.trim(),
     ususenha: usuSenha.value,
-    usuadm: usuAdm.checked ? 'S' : 'N',
-    usupv: usuPv.checked ? 'S' : 'N',
-    usuest: usuEst.checked ? 'S' : 'N',
-    ususta: usuSta.checked ? 'A' : 'I'
+    usuadm: usuAdm.checked ? "S" : "N",
+    usupv: usuPv.checked ? "S" : "N",
+    usuest: usuEst.checked ? "S" : "N",
+    ususta: usuSta.checked ? "A" : "I",
+    usurca: usuRca.checked ? "S" : "N",
   };
 
   try {
@@ -145,9 +157,9 @@ userForm.addEventListener('submit', async (ev) => {
       : `${BASE_URL}/usuario/novo/`;
 
     const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -156,7 +168,9 @@ userForm.addEventListener('submit', async (ev) => {
       try {
         const errObj = await response.json();
         if (errObj && errObj.mensagem) msg = errObj.mensagem;
-      } catch (e) { /**/ }
+      } catch (e) {
+        /**/
+      }
       throw new Error(msg);
     }
 
@@ -165,26 +179,29 @@ userForm.addEventListener('submit', async (ev) => {
     await refreshUsers({ keepSearch: true });
     userModal.hide();
   } catch (error) {
-    console.error('Failed to save user to API:', error);
-    alert(error.message || 'Erro ao salvar usuário. Veja console.');
+    console.error("Failed to save user to API:", error);
+    alert(error.message || "Erro ao salvar usuário. Veja console.");
   }
 });
 
-
 // Excluir usuário via API
-btnDelete.addEventListener('click', async () => {
+btnDelete.addEventListener("click", async () => {
   const id = usuId.value;
   if (!id) return;
-  if (!confirm('Deseja realmente excluir este usuário?')) return;
+  if (!confirm("Deseja realmente excluir este usuário?")) return;
 
   try {
-    const response = await fetch(`${BASE_URL}/usuario/excluir/${id}`, { method: 'POST' });
+    const response = await fetch(`${BASE_URL}/usuario/excluir/${id}`, {
+      method: "POST",
+    });
     if (!response.ok) {
       let msg = `Erro ao excluir usuário (HTTP ${response.status})`;
       try {
         const errObj = await response.json();
         if (errObj && errObj.mensagem) msg = errObj.mensagem;
-      } catch (e) { /**/ }
+      } catch (e) {
+        /**/
+      }
       throw new Error(msg);
     }
 
@@ -192,53 +209,52 @@ btnDelete.addEventListener('click', async () => {
     await refreshUsers({ keepSearch: true });
     userModal.hide();
   } catch (error) {
-    console.error('Failed to delete user:', error);
-    alert(error.message || 'Erro ao excluir usuário');
+    console.error("Failed to delete user:", error);
+    alert(error.message || "Erro ao excluir usuário");
   }
 });
 
 // Novo usuário
-btnNew.addEventListener('click', () => {
+btnNew.addEventListener("click", () => {
   usuEmail.disabled = false;
-  usuId.value = '';
-  usuNome.value = '';
-  usuEmail.value = '';
-  usuSenha.value = '';
-  usuSenha.type = 'password';
+  usuId.value = "";
+  usuNome.value = "";
+  usuEmail.value = "";
+  usuSenha.value = "";
+  usuSenha.type = "password";
   usuAdm.checked = false;
   usuPv.checked = false;
   usuEst.checked = false;
   usuSta.checked = true;
+  usuRca.checked = false;
   userModal.show();
 });
 
-
 // Toggle mostrar senha
-togglePwd.addEventListener('click', () => {
-  usuSenha.type = usuSenha.type === 'password' ? 'text' : 'password';
-  togglePwd.innerHTML = usuSenha.type === 'password'
-    ? '<i class="fa-solid fa-eye"></i>'
-    : '<i class="fa-solid fa-eye-slash"></i>';
+togglePwd.addEventListener("click", () => {
+  usuSenha.type = usuSenha.type === "password" ? "text" : "password";
+  togglePwd.innerHTML =
+    usuSenha.type === "password"
+      ? '<i class="fa-solid fa-eye"></i>'
+      : '<i class="fa-solid fa-eye-slash"></i>';
 });
 
-
-
 // Escape para evitar XSS em campos renderizados
-function escapeHtml(txt = '') {
+function escapeHtml(txt = "") {
   return txt
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 // Eventos de busca com debounce simples
 let searchTimer = null;
-searchInput.addEventListener('input', (e) => {
+searchInput.addEventListener("input", (e) => {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => doSearch(e.target.value), 180);
 });
 
 // inicializa
-doSearch('');
+doSearch("");

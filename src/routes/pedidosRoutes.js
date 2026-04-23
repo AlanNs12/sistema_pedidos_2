@@ -4,6 +4,7 @@ const pedidosController = require("../controllers/pedidosController");
 const autenticarToken = require("../middlewares/middlewares");
 
 router.get("/pedidos/sequencia", pedidosController.sequencia);
+// Stock decrement happens only on order confirmation via database trigger (atualizar_saldo)
 router.post(
   "/pedidos/enviar",
   pedidosController.inserirPv,
@@ -11,9 +12,14 @@ router.post(
 );
 router.get("/pedidos/listar", autenticarToken, pedidosController.listarPv);
 router.get(
-  "/pedidos/pendentes",
+  "/pedidos/pendentescount",
   autenticarToken,
-  pedidosController.listarPvPendentes
+  pedidosController.listarPvPendentesCount
+);
+router.get(
+  "/pedidos/pendentescountNow",
+  autenticarToken,
+  pedidosController.listarPvPendentesCountNow
 );
 router.get(
   "/pedidos/balcao",
@@ -25,10 +31,31 @@ router.get(
   autenticarToken,
   pedidosController.listarPvEntrega
 );
+
+router.get(
+  "/pedidos/balcaoNow",
+  autenticarToken,
+  pedidosController.listarPvBalcaoNow
+);
+router.get(
+  "/pedidos/entregaNow",
+  autenticarToken,
+  pedidosController.listarPvEntregaNow
+);
 router.get(
   "/pedidos/total/confirmados",
   autenticarToken,
   pedidosController.listarTotalPvConfirmados
+);
+router.get(
+  "/pedidos/total/confirmadosNow",
+  autenticarToken,
+  pedidosController.listarTotalPvConfirmadosNow
+);
+router.get(
+  "/pedidos/pendentes",
+  autenticarToken,
+  pedidosController.listarPvPendentes
 );
 router.get(
   "/pedidos/confirmados",
@@ -59,6 +86,11 @@ router.put(
   "/pedidos/itens/confirmar/:pvcod",
   autenticarToken,
   pedidosController.confirmarItemPv
+);
+router.put(
+  "/pedidos/confirmados/:pvcod/itens",
+  autenticarToken,
+  pedidosController.editarItensPedidoConfirmado
 );
 
 module.exports = router;

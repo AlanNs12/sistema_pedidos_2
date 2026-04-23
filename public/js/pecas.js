@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       <td style="white-space: pre-line;">${dado.tipodes}</td>
                       <td class="text-center">
                         <a href="lista-pecas?id=${dado.tipocod}&marcascod=${dado.promarcascod}&modelo=${dado.promodcod}">
-                          <button class="btn btn-info btn-sm btn-add">
+                          <button class="btn btn-primary btn-add">
                       Selecionar <i class="bi bi-arrow-right-short"></i>
                           </button>
                         </a>

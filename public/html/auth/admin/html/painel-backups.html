@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="title"></title>
+  <link rel="shortcut icon" href="/uploads/logo.jpg" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/apple-touch-icon.png" />
+  <!--Links proprios-->
+  <link rel="stylesheet" href="/html/auth/admin/css/style-flexbox.css" />
+  <link rel="stylesheet" href="/html/auth/admin/css/style-painel.css" />
+  <link rel="stylesheet" href="/html/auth/admin/css/style-components.css" />
+  <link rel="stylesheet" href="/html/auth/admin/css/style.css" />
+  <!--links bootstrap-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+  <!--Link tema personalizado bootstrap-->
+  <link rel="stylesheet" href="../../../../css/tema-bootstrap.css" />
+  <!--link tema-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/html/auth/admin/css/style-painel-backups.css" />
+
+</head>
+
+<body>
+  <div class="wrapper">
+    <header id="header-admin">
+      <!--Conteudo do header adicionado via JS-->
+    </header>
+    <main class="bg-light p-3">
+      <div class="container">
+        <div class="panel-hero mb-4">
+          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="icon-circle" aria-hidden="true">
+                <i class="bi bi-database-gear text-primary fs-4"></i>
+              </div>
+              <div>
+                <h1 class="h4 mb-0">Backups</h1>
+                <div class="text-muted small">
+                  Backups diários dos dados do sistema.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="wrap">
+          <h1></h1>
+          <div class="toolbar">
+            <input id="q" type="search" placeholder="Filtrar por nome...">
+            <select id="ext">
+              <option value="">Todas</option>
+              <option>.tgz</option>
+              <option>.log</option>
+            </select>
+            <span class="muted" id="status"></span>
+          </div>
+
+          <table id="tbl">
+            <thead>
+              <tr>
+                <th data-k="nome">Arquivo</th>
+                <th class="right" data-k="tamanhoKB">Tamanho (KB)</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+    <footer id="footer">
+      <!--Conteudo do footer adicionado via JS-->
+    </footer>
+  </div>
+
+  <script src="html/auth/js/componentes.js"></script>
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="../js/nomeEmpresa.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="html/auth/js/painel-backups.js"></script>
+
+</body>
+
+</html>
