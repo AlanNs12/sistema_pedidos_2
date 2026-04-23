@@ -1,6 +1,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const express = require("express");
+const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -27,6 +28,7 @@ const requireAdminPv = require("./middlewares/adminPvMiddleware");
 const requireAdminEst = require("./middlewares/adminEstMiddleware");
 const requireAdminPages = require("./middlewares/adminPagesMiddleware");
 app.set("views", path.join(__dirname, "views"));
+app.use(helmet());
 app.use(compression());
 app.use(requestTimingMiddleware);
 app.use(morgan("dev"));
@@ -36,16 +38,16 @@ app.use(cookieParser());
 
 const corsOptions = {
   origin: [
-    "http://jppecashop.com.br",
-    "http://www.jppecashop.com.br",
-    "http://utidoscelulares.com.br",
-    "http://www.utidoscelulares.com.br",
+    "https://jppecashop.com.br",
+    "https://www.jppecashop.com.br",
+    "https://utidoscelulares.com.br",
+    "https://www.utidoscelulares.com.br",
   ],
   credentials: true,
 };
 
-// Configuração do CORS
 app.use(cors(corsOptions));
+
 
 // Rotas
 const mainRoutes = require("./routes");
