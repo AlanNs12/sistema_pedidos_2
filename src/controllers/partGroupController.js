@@ -182,7 +182,7 @@ exports.updateGroupIdealQty = async (req, res) => {
 // Ajusta estoque do grupo por delta (adicionar ou reduzir)
 exports.adjustGroupStock = async (req, res) => {
   const { id } = req.params;
-  const { delta, reason = "Ajuste_Manual" } = req.body;
+  const { delta, reason = "Ajuste_Manual", cost } = req.body;
 
   if (delta === undefined || delta === null) {
     return res.status(400).json({ error: "Campo delta é obrigatório" });
@@ -193,8 +193,16 @@ exports.adjustGroupStock = async (req, res) => {
     return res.status(400).json({ error: "Delta deve ser um numero inteiro diferente de zero" });
   }
 
+  // Validação do custo se fornecido
+  if (cost !== undefined && cost !== null) {
+    const costNum = parseFloat(cost);
+    if (isNaN(costNum) || costNum < 0) {
+      return res.status(400).json({ error: "Custo inválido" });
+    }
+  }
+
   try {
-    const group = await partGroupModels.adjustGroupStock(id, deltaNum, reason);
+    const group = await partGroupModels.adjustGroupStock(id, deltaNum, reason, cost);
     if (!group) {
       return res.status(404).json({ error: "Grupo não encontrado" });
     }

@@ -179,10 +179,10 @@ async function decrementGroupStock(partId, qty, client = null) {
   try {
     if (shouldCommit) await txClient.query("BEGIN");
 
-    // Busca a peça e seu grupo com bloqueio para atualização
+    // Busca a peça com bloqueio para atualização
     const partResult = await txClient.query(
       `
-      SELECT p.procod, p.part_group_id, p.prodes
+      SELECT p.procod, p.prodes
       FROM pro p
       WHERE p.procod = $1
       FOR UPDATE
@@ -196,7 +196,21 @@ async function decrementGroupStock(partId, qty, client = null) {
 
     const part = partResult.rows[0];
 
-    if (!part.part_group_id) {
+    // Busca o grupo via part_group_items (fonte de verdade da vinculação)
+    const groupLookup = await txClient.query(
+      `
+      SELECT pgi.group_id
+      FROM part_group_items pgi
+      JOIN procor pc ON pc.procorid = pgi.procorid
+      WHERE pc.procorprocod = $1
+      LIMIT 1
+    `,
+      [partId],
+    );
+
+    const groupId = groupLookup.rows.length > 0 ? groupLookup.rows[0].group_id : null;
+
+    if (!groupId) {
       // Peça não pertence a nenhum grupo, decrementa estoque individual
       const updateResult = await txClient.query(
         `
@@ -228,7 +242,7 @@ async function decrementGroupStock(partId, qty, client = null) {
       WHERE id = $1
       FOR UPDATE
     `,
-      [part.part_group_id],
+      [groupId],
     );
 
     if (groupResult.rows.length === 0) {
@@ -249,7 +263,7 @@ async function decrementGroupStock(partId, qty, client = null) {
       WHERE id = $2 AND stock_quantity >= $1
       RETURNING stock_quantity
     `,
-      [qty, part.part_group_id],
+      [qty, groupId],
     );
 
     if (updateResult.rows.length === 0) {
@@ -262,7 +276,7 @@ async function decrementGroupStock(partId, qty, client = null) {
       INSERT INTO part_group_audit (part_group_id, change, reason, reference_id)
       VALUES ($1, $2, $3, $4)
     `,
-      [part.part_group_id, -qty, "sale", partId.toString()],
+      [groupId, -qty, "sale", partId.toString()],
     );
 
     if (shouldCommit) await txClient.query("COMMIT");
@@ -270,7 +284,7 @@ async function decrementGroupStock(partId, qty, client = null) {
     return {
       success: true,
       newStock: updateResult.rows[0].stock_quantity,
-      groupId: part.part_group_id,
+      groupId: groupId,
       groupName: group.name,
     };
   } catch (error) {
@@ -302,10 +316,10 @@ async function incrementGroupStock(
   try {
     if (shouldCommit) await txClient.query("BEGIN");
 
-    // Busca a peça e seu grupo
+    // Busca a peça
     const partResult = await txClient.query(
       `
-      SELECT p.procod, p.part_group_id, p.prodes
+      SELECT p.procod, p.prodes
       FROM pro p
       WHERE p.procod = $1
     `,
@@ -316,9 +330,21 @@ async function incrementGroupStock(
       throw new Error(`Peça com ID ${partId} não encontrada`);
     }
 
-    const part = partResult.rows[0];
+    // Busca o grupo via part_group_items (fonte de verdade da vinculação)
+    const groupLookup = await txClient.query(
+      `
+      SELECT pgi.group_id
+      FROM part_group_items pgi
+      JOIN procor pc ON pc.procorid = pgi.procorid
+      WHERE pc.procorprocod = $1
+      LIMIT 1
+    `,
+      [partId],
+    );
 
-    if (!part.part_group_id) {
+    const groupId = groupLookup.rows.length > 0 ? groupLookup.rows[0].group_id : null;
+
+    if (!groupId) {
       // Peça não pertence a nenhum grupo, incrementa estoque individual
       const updateResult = await txClient.query(
         `
@@ -346,7 +372,7 @@ async function incrementGroupStock(
       WHERE id = $2
       RETURNING stock_quantity
     `,
-      [qty, part.part_group_id],
+      [qty, groupId],
     );
 
     // Cria registro de auditoria
@@ -355,7 +381,7 @@ async function incrementGroupStock(
       INSERT INTO part_group_audit (part_group_id, change, reason, reference_id)
       VALUES ($1, $2, $3, $4)
     `,
-      [part.part_group_id, qty, reason, partId.toString()],
+      [groupId, qty, reason, partId.toString()],
     );
 
     if (shouldCommit) await txClient.query("COMMIT");
@@ -363,7 +389,7 @@ async function incrementGroupStock(
     return {
       success: true,
       newStock: updateResult.rows[0].stock_quantity,
-      groupId: part.part_group_id,
+      groupId: groupId,
     };
   } catch (error) {
     if (shouldCommit) await txClient.query("ROLLBACK");
@@ -672,84 +698,6 @@ async function removeProcorFromGroup(procorid) {
 }
 
 /**
- * @deprecated Use addProcorToGroup instead.
- * Kept for backward compatibility with venderItens / pedidosController.
- */
-async function addPartToGroup(partId, groupId, colorId = null) {
-  // Legacy: link via pro.part_group_id (still used by venderItens/decrementGroupStock)
-  const client = await pool.connect();
-
-  try {
-    await client.query("BEGIN");
-
-    const groupResult = await client.query(
-      `SELECT stock_quantity, grpcusto FROM part_groups WHERE id = $1`,
-      [groupId],
-    );
-
-    if (groupResult.rows.length === 0) {
-      await client.query("ROLLBACK");
-      return null;
-    }
-
-    const group = groupResult.rows[0];
-
-    let updateQuery;
-    let updateParams;
-
-    if (group.grpcusto !== null && group.grpcusto !== undefined) {
-      updateQuery = `
-        UPDATE pro 
-        SET part_group_id = $1, procusto = $2
-        WHERE procod = $3
-        RETURNING procod, prodes, part_group_id, proqtde
-      `;
-      updateParams = [groupId, group.grpcusto, partId];
-    } else {
-      updateQuery = `
-        UPDATE pro 
-        SET part_group_id = $1
-        WHERE procod = $2
-        RETURNING procod, prodes, part_group_id, proqtde
-      `;
-      updateParams = [groupId, partId];
-    }
-
-    const result = await client.query(updateQuery, updateParams);
-    const part = result.rows[0];
-    if (!part) {
-      await client.query("ROLLBACK");
-      return null;
-    }
-
-    await client.query("COMMIT");
-    return part;
-  } catch (error) {
-    await client.query("ROLLBACK");
-    throw error;
-  } finally {
-    client.release();
-  }
-}
-
-/**
- * @deprecated Use removeProcorFromGroup instead.
- * Kept for backward compatibility.
- */
-async function removePartFromGroup(partId) {
-  const result = await pool.query(
-    `
-    UPDATE pro 
-    SET part_group_id = NULL
-    WHERE procod = $1
-    RETURNING procod, prodes, part_group_id
-  `,
-    [partId],
-  );
-  return result.rows[0] || null;
-}
-
-/**
  * Busca peças disponíveis para agrupamento
  * Retorna peças que não estão em nenhum grupo ou que estão no grupo especificado
  * @param {number|null} currentGroupId - ID do grupo atual (opcional)
@@ -771,7 +719,15 @@ async function getAvailableParts(currentGroupId = null) {
       FROM pro p
       LEFT JOIN marcas m ON m.marcascod = p.promarcascod
       LEFT JOIN tipo t ON t.tipocod = p.protipocod
-      WHERE p.part_group_id IS NULL OR p.part_group_id = $1
+      WHERE NOT EXISTS (
+        SELECT 1 FROM part_group_items pgi
+        JOIN procor pc ON pc.procorid = pgi.procorid
+        WHERE pc.procorprocod = p.procod
+      ) OR EXISTS (
+        SELECT 1 FROM part_group_items pgi
+        JOIN procor pc ON pc.procorid = pgi.procorid
+        WHERE pc.procorprocod = p.procod AND pgi.group_id = $1
+      )
       ORDER BY p.prodes
     `;
     params = [currentGroupId];
@@ -788,7 +744,11 @@ async function getAvailableParts(currentGroupId = null) {
       FROM pro p
       LEFT JOIN marcas m ON m.marcascod = p.promarcascod
       LEFT JOIN tipo t ON t.tipocod = p.protipocod
-      WHERE p.part_group_id IS NULL
+      WHERE NOT EXISTS (
+        SELECT 1 FROM part_group_items pgi
+        JOIN procor pc ON pc.procorid = pgi.procorid
+        WHERE pc.procorprocod = p.procod
+      )
       ORDER BY p.prodes
     `;
     params = [];
@@ -1004,6 +964,16 @@ async function updateGroupStock(
       [newQuantity, groupId],
     );
 
+    // Sincroniza pro.proqtde para peças ainda ligadas por part_group_id legado
+    await client.query(
+      `
+      UPDATE pro
+      SET proqtde = $1
+      WHERE part_group_id = $2
+    `,
+      [newQuantity, groupId],
+    );
+
     // Cria registro de auditoria se houve alteração
     if (change !== 0) {
       await client.query(
@@ -1113,7 +1083,7 @@ async function venderItens(itens, referenceId = null) {
       // Busca a peça com bloqueio para atualização
       const partResult = await client.query(
         `
-        SELECT p.procod, p.prodes, p.part_group_id, p.proqtde
+        SELECT p.procod, p.prodes, p.proqtde
         FROM pro p
         WHERE p.procod = $1
         FOR UPDATE
@@ -1127,8 +1097,22 @@ async function venderItens(itens, referenceId = null) {
 
       const part = partResult.rows[0];
 
+      // Busca o grupo via part_group_items (fonte de verdade da vinculação)
+      const groupLookup = await client.query(
+        `
+        SELECT pgi.group_id
+        FROM part_group_items pgi
+        JOIN procor pc ON pc.procorid = pgi.procorid
+        WHERE pc.procorprocod = $1
+        LIMIT 1
+      `,
+        [partId],
+      );
+
+      const groupId = groupLookup.rows.length > 0 ? groupLookup.rows[0].group_id : null;
+
       // CASO 1: Peça não pertence a nenhum grupo
-      if (!part.part_group_id) {
+      if (!groupId) {
         // Verifica estoque individual
         if (part.proqtde < quantidade) {
           throw new Error(
@@ -1160,7 +1144,6 @@ async function venderItens(itens, referenceId = null) {
       }
 
       // CASO 2: Peça pertence a um grupo
-      const groupId = part.part_group_id;
 
       // Verifica se já processamos este grupo (para itens do mesmo grupo no carrinho)
       if (gruposProcessados.has(groupId)) {
@@ -1209,11 +1192,13 @@ async function venderItens(itens, referenceId = null) {
         // Busca todas as peças do grupo com bloqueio para validação e atualização
         const pecasGrupoResult = await client.query(
           `
-          SELECT procod, prodes, proqtde
-          FROM pro
-          WHERE part_group_id = $1
-          ORDER BY proqtde DESC, procod ASC
-          FOR UPDATE
+          SELECT p.procod, p.prodes, p.proqtde
+          FROM pro p
+          JOIN part_group_items pgi ON pgi.group_id = $1
+          JOIN procor pc ON pc.procorid = pgi.procorid AND pc.procorprocod = p.procod
+          GROUP BY p.procod, p.prodes, p.proqtde
+          ORDER BY p.proqtde DESC, p.procod ASC
+          FOR UPDATE OF p
         `,
           [groupId],
         );
@@ -1236,7 +1221,12 @@ async function venderItens(itens, referenceId = null) {
           `
           UPDATE pro 
           SET proqtde = proqtde - $1
-          WHERE part_group_id = $2
+          WHERE procod IN (
+            SELECT pc.procorprocod
+            FROM part_group_items pgi
+            JOIN procor pc ON pc.procorid = pgi.procorid
+            WHERE pgi.group_id = $2
+          )
         `,
           [quantidadeTotal, groupId],
         );
@@ -1244,9 +1234,10 @@ async function venderItens(itens, referenceId = null) {
         // Atualiza o estoque do grupo para MIN(estoque das peças)
         const minEstoqueResult = await client.query(
           `
-          SELECT COALESCE(MIN(proqtde), 0) as min_estoque
-          FROM pro
-          WHERE part_group_id = $1
+          SELECT COALESCE(MIN(p.proqtde), 0) as min_estoque
+          FROM pro p
+          JOIN part_group_items pgi ON pgi.group_id = $1
+          JOIN procor pc ON pc.procorid = pgi.procorid AND pc.procorprocod = p.procod
         `,
           [groupId],
         );
@@ -1292,11 +1283,13 @@ async function venderItens(itens, referenceId = null) {
         // Busca todas as peças do grupo com bloqueio, ordenadas por estoque DESC, id ASC
         const pecasGrupoResult = await client.query(
           `
-          SELECT procod, prodes, proqtde
-          FROM pro
-          WHERE part_group_id = $1
-          ORDER BY proqtde DESC, procod ASC
-          FOR UPDATE
+          SELECT p.procod, p.prodes, p.proqtde
+          FROM pro p
+          JOIN part_group_items pgi ON pgi.group_id = $1
+          JOIN procor pc ON pc.procorid = pgi.procorid AND pc.procorprocod = p.procod
+          GROUP BY p.procod, p.prodes, p.proqtde
+          ORDER BY p.proqtde DESC, p.procod ASC
+          FOR UPDATE OF p
         `,
           [groupId],
         );
@@ -1420,10 +1413,11 @@ async function updateGroupIdealQty(groupId, qtdeIdeal) {
  * @param {number} groupId - ID do grupo (INTEGER)
  * @param {number} delta - Quantidade a adicionar (positivo) ou reduzir (negativo)
  * @param {string} reason - Motivo do ajuste
+ * @param {number|null} newCost - Novo custo do grupo (opcional)
  * @returns {Object} Grupo atualizado com novo estoque
  * @throws {Error} Se o novo estoque ficar negativo
  */
-async function adjustGroupStock(groupId, delta, reason = "Ajuste_Manual") {
+async function adjustGroupStock(groupId, delta, reason = "Ajuste_Manual", newCost = null) {
   const groupResult = await pool.query(
     `SELECT id, COALESCE(stock_quantity, 0) AS stock_quantity FROM part_groups WHERE id = $1`,
     [groupId],
@@ -1442,7 +1436,7 @@ async function adjustGroupStock(groupId, delta, reason = "Ajuste_Manual") {
     );
   }
 
-  return updateGroupStock(groupId, newStock, reason);
+  return updateGroupStock(groupId, newStock, reason, newCost);
 }
 
 module.exports = {
@@ -1458,8 +1452,6 @@ module.exports = {
   addProcorToGroup,
   addProcorToGroupByProcod,
   removeProcorFromGroup,
-  addPartToGroup,
-  removePartFromGroup,
   getAvailableParts,
   getAvailablePart,
   getGroupAuditHistory,
